@@ -19,7 +19,7 @@ const ImageGenerator = ({ theme, setTheme }) => {
     // Load images from local storage on initial render
     useEffect(() => {
         const storedImages = JSON.parse(localStorage.getItem('images')) || [];
-        setImages(storedImages);
+        setImages(storedImages.reverse());
     }, []);
 
     const handleSubmit = async (e) => {
@@ -61,7 +61,7 @@ const ImageGenerator = ({ theme, setTheme }) => {
                 localStorage.setItem('images', JSON.stringify(storedImages));
 
                 // Update state
-                setImages(storedImages);
+                setImages(storedImages.reverse());
                 setTaskId(null);
                 setLoading(false);
             } else if (status === 'PENDING') {

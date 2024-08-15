@@ -65,6 +65,7 @@ const FullImageViewer = ({ image, onClose }) => {
                                 <strong>Original Prompt</strong>
                                 <hr />
                                 {image.prompt}
+                                <br />
                                 {image.refinedPrompt && image.refinedPrompt.trim() !== '' && (
                                     <>
                                         <br />
