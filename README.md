@@ -1,0 +1,66 @@
+# React Image Generator App
+
+This is a React application that allows users to generate and manage images based on prompts. The application includes features for generating images, viewing thumbnails, and clearing images.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Components](#components)
+- [Hooks](#hooks)
+- [Folder Structure](#folder-structure)
+
+## Installation
+
+To get started with the application, follow these steps:
+
+1. **Clone the Repository**
+
+   ```
+   git clone https://github.com/missionctlio/ai-image-frontend.git
+   ```
+
+2. **Navigate to the Project Directory**
+
+   ```
+   cd ai-image-frontend
+   ```
+
+
+3. **Start the Development Server**
+
+   ```
+   docker-compose up
+   ```
+
+   This will start the development server and open the application in your default web browser.
+
+   It can be accessed at `http://localhost:3000`
+
+
+4. **Use local inference server ([ai-image](https://github.com/missionctlio/ai-image))**
+
+   Edit the baseUrl to `localhost:8888` ([here](https://github.com/missionctlio/ai-image-frontend/blob/develop/src/api.js#L3))
+
+## Usage
+
+Once the application is running, you can:
+
+- **Generate Images**: Enter a prompt, select an aspect ratio, and click "Generate" to create new images.
+- **View Thumbnails**: See the generated images as thumbnails.
+- **Delete Images**: Remove individual images or clear all images using the provided buttons.
+
+## Components
+
+- **`FullImageViewer.js`**: A component to display a full-size image with a close button.
+- **`ImageGenerator.js`**: The main component for generating images based on user input.
+- **`ThemeSelector.js`**: Allows users to select and switch themes.
+- **`Thumbnails.js`**: Displays thumbnails of generated images and handles image deletion.
+
+## Hooks
+
+- **`useSaveToLocalStorage.js`**: A custom hook for saving data to local storage.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
