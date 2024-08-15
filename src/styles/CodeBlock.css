@@ -1,0 +1,52 @@
+/* CodeBlock.css */
+
+/* CodeBlock container styling */
+.code-block {
+    position: relative;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--codeblock-background); /* Use theme variable for background */
+    color: var(--codeblock-text); /* Use theme variable for text color */
+    overflow-x: auto; /* Allows horizontal scrolling if content overflows */
+    font-size: var(--codeblock-font-size, 14px); /* Default font size with theme variable support */
+}
+
+/* CodeBlock language label styling */
+.code-block-language {
+    font-size: var(--codeblock-language-font-size, 14px); /* Default font size with theme variable support */
+    font-weight: bold;
+    background: none !important;
+    color: var(--codeblock-language-color, #8c8c8c); /* Default color with theme variable support */
+    margin-bottom: 5px;
+    max-width:20vh;
+}
+
+/* Copy button styling */
+.codeblock-copy-button {
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--code-block-text); /* Use theme variable */
+    cursor: pointer;
+    font-size: 16px;
+    z-index: 5; /* Ensure it is above other content */
+}
+.codeblock-copy-button:hover {
+    color: var(--copy-button-hover-color, #66d9ef); /* Highlight color for button on hover */
+}
+
+/* Optional: Add responsive styles for mobile */
+@media (max-width: 600px) {
+    .code-block {
+        font-size: var(--codeblock-font-size-mobile, 14px); /* Smaller font size for mobile */
+    }
+
+    .codeblock-copy-button {
+        font-size: var(--copy-button-font-size-mobile, 14px); /* Adjust button size for mobile */
+    }
+}

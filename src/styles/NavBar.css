@@ -1,0 +1,193 @@
+/* Navbar Container */
+.navbar-container {
+    background-color: #1e1e1e;  /* Slightly lighter dark background for better contrast */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid #333;
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:99%;
+    z-index: 999;
+
+}
+
+/* Navbar Brand */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-right: auto; /* Ensure the brand (Welcome text) stays on the left */
+    padding-left: 50px;
+}
+
+/* Navbar Menu */
+.navbar-menu {
+    display: flex;
+    gap: 0.75rem;  /* Decrease gap between items */
+    margin-left: auto;  /* Move the menu to the right, next to the profile icon */
+    margin-right: 0.5rem;  /* Adjust the space between the menu and the profile icon */
+}
+
+.navbar-item {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;  /* Decrease padding to reduce the size of the items */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    position: relative;
+    border-radius: 5px;
+}
+
+.navbar-item:hover,
+.navbar-item.active {
+    background-color: #3a3a3a;  /* Lighter dark color for better hover effect */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Profile Icon Container */
+.profile-icon-container {
+    
+    /* margin-left: auto; */  /* Remove this to allow the menu to be next to the profile icon */
+}
+
+/* Profile Icon Button */
+.profile-icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: transparent;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+}
+/* 
+.profile-icon-button:hover .profile-icon {
+    background-color: #3a3a3a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+} */
+
+/* Dropdown Styles */
+.settings-dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #2a2a2a;  /* Slightly lighter dark background for dropdown */
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    padding: 0.75rem 0;
+    border-radius: 8px;
+    z-index: 20;
+    min-width: 240px;
+    border: 1px solid #444;  /* Add a border to separate the dropdown */
+}
+
+/* Profile Details Section */
+.profile-overlay {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+}
+
+.profile-overlay span {
+    display: block;
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+}
+
+.profile-overlay .profile-icon {
+    margin-bottom: 1rem;
+    width: 50px;
+    height: 50px;
+}
+
+.profile-overlay svg {
+    margin-right: 0.5rem;
+}
+
+/* Dropdown Item Styles */
+.settings-dropdown .navbar-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #555;  /* Darker border for dropdown items */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 5px;
+    margin-bottom: 0.25rem;  /* Add spacing between items */
+}
+
+.settings-dropdown .navbar-item svg {
+    margin-right: 12px;
+    color: #888;  /* Lighten the icon color for contrast */
+    transition: color 0.3s ease;
+}
+
+.settings-dropdown .navbar-item:last-child {
+    border-bottom: none;
+}
+
+.settings-dropdown .navbar-item:hover {
+    background-color: #444444;
+    transform: translateX(5px);
+    color: #fff;  /* Change text color on hover */
+}
+
+.settings-dropdown .navbar-item:hover svg {
+    color: #fff;  /* Change icon color on hover */
+}
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 360px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-end;  /* Align items to the right in mobile view */
+    }
+
+    .navbar-brand {
+        align-self: flex-start; /* Keep "Welcome" text aligned to the left on mobile */
+        margin-right: auto;  /* Ensure "Welcome" stays on the left in mobile view */
+    }
+
+    .navbar-menu {
+        display: flex;  /* Ensure the menu is visible */
+        flex-direction: column;  /* Stack items vertically in mobile view */
+        gap: 0.5rem;
+        margin-left: 0;  /* Remove the auto margin */
+        margin-right: 0;  /* Remove the right margin to align with the profile icon */
+    }
+
+    .settings-dropdown {
+        min-width: 240px;  /* Ensure the dropdown width is consistent */
+        top: 0;
+    }
+
+    .profile-icon-button {
+        position:absolute;
+        right: -15px;
+        top:1vh;
+    }
+}

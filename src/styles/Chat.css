@@ -1,0 +1,165 @@
+/* Chat container styling */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Chat messages container */
+.chat-messages {
+    flex: 1;
+    margin-top:5vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse; /* Newest messages at the bottom */
+    gap: 10px; /* Space between messages */
+}
+
+/* Chat message styling */
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 100%;
+    display: block !important;
+    margin: 0;
+    word-wrap: break-word; /* Ensure long messages wrap */
+}
+
+.message li {
+    margin-bottom: 10px;
+}
+.message p {
+    margin:20px 0;
+}
+
+.user-message {
+    align-self: flex-end;
+}
+
+.bot-message {
+    align-self: flex-start;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 8px; /* Space between textarea and buttons */
+}
+
+textarea {
+    flex: 1; /* Grow to fill available space */
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background: var(--background-white);
+    color: var(--text-dark);
+    font-size: 1em;
+    min-height: 50px;
+    resize: none; /* Prevent manual resizing */
+    overflow: hidden; /* Prevent scrollbars */
+    max-width: calc(100% - 100px); /* Ensure textarea does not overflow with buttons */
+}
+
+.send-button, .stop-button, .clear-button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    justify-content: center;
+    width: 40px; /* Set width for circular shape */
+    height: 40px; /* Set height for circular shape */
+    font-size: 1.2em; /* Adjust icon size */
+}
+
+.send-button {
+    background: var(--primary-blue);
+    color: #fff;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.send-button:hover {
+    background: var(--primary-blue-dark); /* Darker blue on hover */
+}
+
+.stop-button {
+    color: #c53030; /* Red color */
+}
+
+.stop-button:hover {
+    color: #a12a2a; /* Darker red on hover */
+}
+
+.clear-button {
+    color: #dc3545; /* Red color */
+}
+
+.clear-button:hover {
+    color: #b02a37; /* Darker red on hover */
+}
+
+/* Error message styling */
+.error {
+    color: var(--accent-magenta);
+    padding: 10px;
+    background: #fff3f3;
+    border: 1px solid var(--accent-magenta);
+    border-radius: 5px;
+    margin: 10px;
+}
+
+/* Import Prism CSS from CDN */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-dracula.min.css');
+
+/* Container for the loading spinner */
+.loading-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+/* Styling for the spinner icon */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Keyframes for the spinner animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive styling for mobile */
+@media (max-width: 600px) {
+    .input-container {
+        gap: 4px; /* Reduce space between textarea and buttons */
+    }
+
+    textarea {
+        font-size: 0.9em; /* Slightly smaller font size */
+        min-height: 40px; /* Adjust height for better fit */
+        max-width: calc(100% - 80px); /* Ensure textarea does not overflow with buttons */
+    }
+    .message {
+        font-size: 0.8em;
+    }
+    .send-button, .stop-button, .clear-button {
+        width: 35px; /* Slightly smaller button size */
+        height: 35px; /* Slightly smaller button size */
+        font-size: 1em; /* Adjust icon size */
+    }
+    
+    .message pre {
+        overflow-x: auto; /* Enable horizontal scrolling for code blocks */
+    }
+}

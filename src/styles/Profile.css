@@ -1,0 +1,31 @@
+.profile-container {
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4); /* Doubled shadow intensity */
+    backdrop-filter: blur(10px); /* Adds a blur effect */
+    background-color: rgba(200, 200, 200, 0.8); /* Light gray see-through background */
+    color: var(--text-color); /* Text color based on the theme */
+}
+
+.profile-container.light-theme {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly lighter gray for light theme */
+    color: #333; /* Dark text color */
+}
+
+.profile-container.dark-theme {
+    background-color: rgba(50, 50, 50, 0.9); /* Slightly darker gray for dark theme */
+    color: #f1f1f1; /* Light text color */
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #333; /* Default background if no image */
+}
+
