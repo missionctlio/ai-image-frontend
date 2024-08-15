@@ -8,7 +8,6 @@ This is a React application that allows users to generate and manage images base
 - [Usage](#usage)
 - [Components](#components)
 - [Hooks](#hooks)
-- [Folder Structure](#folder-structure)
 
 ## Installation
 
