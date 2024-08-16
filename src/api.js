@@ -20,3 +20,9 @@ export const deleteImages = async (imageIds) => {
     });
     return response.data;
 };
+
+// New function for generate_query endpoint
+export const chat = async (query) => {
+    const response = await axios.post(`${baseUrl}/chat`, { query });
+    return response.data;
+};

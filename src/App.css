@@ -652,3 +652,10 @@ input.dark-theme:focus {
 .text-info-container p {
     font-size:0.7em;
 }
+
+
+.component-selector-dropdown-container {
+    position:absolute;
+    top:25px;
+    left:0px;
+}
