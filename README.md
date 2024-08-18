@@ -25,8 +25,15 @@ To get started with the application, follow these steps:
    cd ai-image-frontend
    ```
 
+3. **Set Up the Environment**
 
-3. **Start the Development Server**
+   Ensure you have the necessary environment variables. Create a `.env` file in the project root directory with the following variables:
+
+   ```
+   REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
+   ```
+
+4. **Start the Development Server**
 
    ```
    docker-compose up
@@ -37,7 +44,7 @@ To get started with the application, follow these steps:
    It can be accessed at `http://localhost:3000`
 
 
-4. **Use local inference server ([ai-image](https://github.com/missionctlio/ai-image))**
+5. **Use local inference server ([ai-image](https://github.com/missionctlio/ai-image))**
 
    Edit the baseUrl to `localhost:8888` ([here](https://github.com/missionctlio/ai-image-frontend/blob/develop/src/api.js#L3))
 
@@ -55,6 +62,7 @@ Once the application is running, you can:
 - **`ImageGenerator.js`**: The main component for generating images based on user input.
 - **`ThemeSelector.js`**: Allows users to select and switch themes.
 - **`Thumbnails.js`**: Displays thumbnails of generated images and handles image deletion.
+- **`Auth.js`**: Component handles the authentication process using Google OAuth. This component leverages the `@react-oauth/google` library to provide an easy-to-use interface for signing in and out with Google.
 
 ## Hooks
 
