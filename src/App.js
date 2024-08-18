@@ -1,9 +1,9 @@
-import React, { useState } from 'react'; // Import useState here
-import { useAuth } from './components/Auth'; // Assuming Auth.js is in components
+import React, { useState } from 'react';
+import { useAuth } from './components/Auth';
 import ImageGenerator from './components/ImageGenerator';
 import ThemeSelector from './components/ThemeSelector'; // Assuming this is a separate component for the theme selector
 import Chat from './components/Chat';
-import './App.css'; // Global styles, if any
+import './App.css'; // Import the CSS file for styling
 
 function App() {
     const { user, login, logout } = useAuth();
