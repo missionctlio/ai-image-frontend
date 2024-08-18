@@ -1,0 +1,59 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../images/background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.login-box, .logout-box {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333333;
+}
+
+.modern-google-button {
+    background-color: #ffffff;
+    color: #5f6368;
+    padding: 10px 20px;
+    border: 1px solid #dadce0;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.modern-google-button:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modern-google-button .gsi-material-button-icon {
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.modern-google-button svg {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
