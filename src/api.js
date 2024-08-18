@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = 'http://localhost:8888'; // Corrected the URL syntax
+export const baseUrl = 'http://aesync.servebeer.com:8888';
 
 export const generateImage = async (data, apiKey) => {
     const response = await axios.post(`${baseUrl}/generate-image`, data, {
