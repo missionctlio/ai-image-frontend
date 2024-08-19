@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import FullImageViewer from './FullImageViewer'; // Import the FullImageViewer component
+import FullImageViewer from './FullImageViewer';
 import { baseUrl } from '../api';
+import { deleteImages } from '../api';
 
-const Thumbnails = ({ images: propImages }) => { // Receive images as a prop
+const Thumbnails = ({ images: propImages }) => {
     const [images, setImages] = useState([]);
     const [showClearButton, setShowClearButton] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -12,14 +13,16 @@ const Thumbnails = ({ images: propImages }) => { // Receive images as a prop
             setImages(propImages);
             setShowClearButton(propImages.length > 0);
         }
-    }, [propImages]); // Update whenever propImages changes
+    }, [propImages]);
 
     const handleClearImages = async () => {
-        // Iterate over each image and delete it
-        for (const [index, image] of images.entries()) {
-            await deleteImage(index);
-        }
-        // Clear local storage and update state
+        const imageIds = images.map(image => {
+            const imageUrl = image.imageUrl;
+            return imageUrl.split('/').pop().replace('original_', '');
+        });
+
+        await deleteImages(imageIds);
+
         localStorage.removeItem('images');
         setImages([]);
         setShowClearButton(false);
@@ -33,37 +36,21 @@ const Thumbnails = ({ images: propImages }) => { // Receive images as a prop
         setSelectedImage(null);
     };
 
-    const deleteImage = async (index) => {
-        const images = JSON.parse(localStorage.getItem('images')) || [];
-        if (index >= 0 && index < images.length) {
+    const deleteImage = async (imageToDelete) => {
+        const index = images.findIndex(img => img.imageUrl === imageToDelete.imageUrl);
+
+        if (index !== -1) {
             const imageUrl = images[index].imageUrl;
-            const imageId = imageUrl.split('/').pop();
-            const originalImageId = imageId.replace('original_', '');
+            const imageId = imageUrl.split('/').pop().replace('original_', '');
 
-            try {
-                const response = await fetch(`${baseUrl}/delete-images/`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ image_ids: [imageId, originalImageId] })
-                });
+            await deleteImages([imageId]);
 
-                if (response.ok) {
-                    images.splice(index, 1);
-                    localStorage.setItem('images', JSON.stringify(images));
-                    setImages([...images]); // Refresh the images state
-                } else {
-                    alert('Error deleting image. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while deleting the image.');
-            }
+            const updatedImages = images.filter((_, i) => i !== index);
+            localStorage.setItem('images', JSON.stringify(updatedImages));
+            setImages(updatedImages);
         }
     };
 
-    // Determine the current theme from local storage
     const theme = localStorage.getItem('theme') || 'light';
     
     return (
@@ -89,7 +76,10 @@ const Thumbnails = ({ images: propImages }) => { // Receive images as a prop
                         <div className="description-container">
                             Aspect Ratio: {image.aspectRatio}
                         </div>
-                        <div className="delete-icon" onClick={() => deleteImage(index)}>
+                        <div 
+                            className="delete-icon" 
+                            onClick={() => deleteImage(image)}
+                        >
                             ×
                         </div>
                     </div>
