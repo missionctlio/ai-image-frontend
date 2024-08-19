@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import axios from 'axios';
 import '../styles/Auth.css';
+import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
 
 export const useAuth = () => {
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? JSON.parse(savedUser) : null;
     });
-
+    const [theme, setTheme] = useState('dark'); // Default theme
     const getUserInfo = async (token) => {
         try {
             const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -49,6 +50,10 @@ export const useAuth = () => {
     };
 
     useEffect(() => {
+        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
         const handleStorageChange = () => {
             const savedUser = localStorage.getItem('user');
             if (!savedUser) {
@@ -63,11 +68,11 @@ export const useAuth = () => {
         };
     }, []);
 
-    return { user, login, logout };
+    return { user, login, logout, theme };
 };
 
 const Auth = () => {
-    const { user, login, logout } = useAuth();
+    const { user, login, logout, theme } = useAuth();
 
     return (
         <div className="login-container">
@@ -96,7 +101,7 @@ const Auth = () => {
             ) : (
                 <div className="logout-box">
                     <h2>Welcome back, {user.name}</h2>
-                    <button onClick={logout} className="modern-google-button">
+                    <button onClick={logout} className={`modern-google-button theme-${theme} theme-selector`}>
                         Logout
                     </button>
                 </div>

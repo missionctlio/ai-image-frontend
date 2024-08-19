@@ -5,9 +5,9 @@ import { chat } from '../api';
 import '../styles/Chat.css'; // Import CSS for Chat component styling
 import { AiOutlineSend } from 'react-icons/ai'; // Import send icon from react-icons
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
 
 const LOCAL_STORAGE_KEY = 'chatMessages';
-const THEME_LOCAL_STORAGE_KEY = 'theme'; // Key for storing theme in localStorage
 const UUID_LOCAL_STORAGE_KEY = 'UserId'; // Key for storing UUID in localStorage
 
 const Chat = () => {

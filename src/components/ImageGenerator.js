@@ -3,9 +3,7 @@ import { generateImage, getTaskStatus } from '../api';
 import useSaveToLocalStorage from '../hooks/useSaveToLocalStorage'; // Adjust path as necessary
 import Thumbnails from './Thumbnails'; // Import the Thumbnails component
 import { FaPaperPlane } from 'react-icons/fa'; // Import the icon (Font Awesome example)
-import { baseUrl } from '../api';
-
-const THEME_LOCAL_STORAGE_KEY = 'theme';
+import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
 
 const ImageGenerator = () => {
     const [prompt, setPrompt] = useState('');
