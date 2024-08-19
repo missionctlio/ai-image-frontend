@@ -40,7 +40,6 @@ body {
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
     display: flex;
     flex-direction: column-reverse; /* Newest messages at the bottom */
     gap: 10px; /* Space between messages */

@@ -8,7 +8,7 @@ import './App.css'; // Import the CSS file for styling
 function App() {
     const { user, login, logout } = useAuth();
     const [theme, setTheme] = useState('light');
-    const [selectedComponent, setSelectedComponent] = useState('chat');
+    const [selectedComponent, setSelectedComponent] = useState('imageGenerator');
 
     const handleComponentChange = (event) => {
         const newValue = event.target.value;
@@ -36,8 +36,8 @@ function App() {
                         <option value="chat">Chat</option>
                         <option value="imageGenerator">Image Generator</option>
                     </select>
-                </div>
-                        <button onClick={logout} className={`theme-selector theme-${theme}`}style={{ marginLeft: 'auto' }}>Logout</button>
+                </div><span  style={{ marginLeft: 'auto' }}> Welcome, {user.given_name}</span>
+                        <button onClick={logout} className={`theme-selector`} style={{ marginLeft: 'auto' }}>Logout</button>
                     </div>
             {/* Conditional rendering based on selectedComponent */}
             {selectedComponent === 'chat' && (
