@@ -660,10 +660,11 @@ input.dark-theme:focus {
 
 
 .topSelector {
-    position:absolute;
+    position:relative;
     display:flex;
-    left:5px;
-    top:25px;
+    left:0px;
+    top:0px;
+    margin: 5px 0px 0px 5px;
 }
 
 .send-button:hover {

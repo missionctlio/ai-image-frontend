@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for light and dark themes
-
+export const THEME_LOCAL_STORAGE_KEY = 'theme'; // Key for storing theme in localStorage
 // Function to apply the theme to the document
 export const applyTheme = (theme) => {
     if (theme === 'dark') {
@@ -24,14 +24,14 @@ const ThemeSelector = () => {
     // Determine the default theme based on system preferences
     const getDefaultTheme = () => {
         const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        return localStorage.getItem('theme') || (userPrefersDark ? 'dark' : 'light');
+        return localStorage.getItem(THEME_LOCAL_STORAGE_KEY) || (userPrefersDark ? 'dark' : 'light');
     };
 
     const [theme, setTheme] = useState(getDefaultTheme);
 
     useEffect(() => {
         applyTheme(theme);
-        localStorage.setItem('theme', theme); // Save the selected theme to local storage
+        localStorage.setItem(THEME_LOCAL_STORAGE_KEY, theme); // Save the selected theme to local storage
     }, [theme]);
 
     const handleChange = (e) => {
