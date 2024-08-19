@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import ImageGenerator from './components/ImageGenerator';
+import ThemeSelector from './components/ThemeSelector'; // Assuming this is a separate component for the theme selector
 import Chat from './components/Chat';
 import './App.css'; // Import the CSS file for styling
 
 function App() {
-    const [theme, setTheme] = useState('light');
-    const [selectedComponent, setSelectedComponent] = useState('chat');
+    const [theme, setTheme] = useState('');
+    const [selectedComponent, setSelectedComponent] = useState('Component');
 
     // Load component selection from local storage on initial render
     useEffect(() => {
@@ -17,30 +18,39 @@ function App() {
 
     // Save component selection to local storage whenever it changes
     useEffect(() => {
-        localStorage.setItem('selectedComponent', selectedComponent);
+        if (selectedComponent !== 'Component') {
+            localStorage.setItem('selectedComponent', selectedComponent);
+        }
     }, [selectedComponent]);
 
     // Handle change in dropdown selection
     const handleComponentChange = (event) => {
-        setSelectedComponent(event.target.value);
+        const newValue = event.target.value;
+        setSelectedComponent(newValue);
+        if (newValue !== 'Component') {
+            localStorage.setItem('selectedComponent', newValue);
+        }
     };
 
     return (
         <div className={`app-container ${theme}`}>
-            {/* Dropdown for selecting component */}
-            <div className="component-selector-dropdown-container">
-                <label htmlFor="component-select">Choose a component:</label>
-                <select
-                    id="component-select"
-                    value={selectedComponent}
-                    onChange={handleComponentChange}
-                    className="component-select"
-                >
-                    <option value="chat">Chat</option>
-                    <option value="imageGenerator">Image Generator</option>
-                </select>
-            </div>
+            <div className="topSelector">
+                <ThemeSelector theme={theme} setTheme={setTheme} />
+                <br />
+                {/* Dropdown for selecting component */}
+                <div className="component-selector-dropdown-container">
+                    <select
+                        id="component-select"
+                        value={selectedComponent}
+                        onChange={handleComponentChange}
+                        className="component-select theme-selector"
+                    >
 
+                        <option value="chat">Chat</option>
+                        <option value="imageGenerator">Image Generator</option>
+                    </select>
+                </div>
+            </div>
             {/* Conditional rendering based on selectedComponent */}
             {selectedComponent === 'chat' && (
                 <div id="chat-container" className={theme}>

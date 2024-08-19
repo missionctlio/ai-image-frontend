@@ -552,14 +552,6 @@ input[type="text"] {
     #thumbnails {
         grid-template-columns: repeat(auto-fill, minmax(25%, 1fr)); /* Reduced size of grid items */
     }
-
-
-    .loading-dots {
-        padding:0px;
-        left:57px;
-        top:0px;
-
-    }
 }
 
 #clearThumbnails {
@@ -577,7 +569,6 @@ input[type="text"] {
     background: linear-gradient(145deg, #ffffff, #e6f0ff); /* Light gradient background */
     color: #333; /* Neutral text color */
     font-size: 1em;
-    cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Enhanced depth and shadow */
     transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
 }
@@ -590,6 +581,20 @@ input[type="text"] {
 .theme-selector option {
     background: #ffffff;
     color: #333; /* Neutral text color */
+}
+
+.theme-selector {
+    display: flex;
+    align-items: center;
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+}
+
+.theme-option svg {
+    margin-right: 8px;
 }
 
 /* Light Theme Styles */
@@ -654,8 +659,18 @@ input.dark-theme:focus {
 }
 
 
-.component-selector-dropdown-container {
+.topSelector {
     position:absolute;
+    display:flex;
+    left:5px;
     top:25px;
-    left:0px;
+}
+
+.send-button:hover {
+    background: var(--accent-blue-dark);
+}
+
+.send-button:disabled {
+    background: var(--accent-blue-light);
+    cursor: not-allowed;
 }

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { generateImage, getTaskStatus } from '../api';
-import ThemeSelector from './ThemeSelector'; // Assuming this is a separate component for the theme selector
 import useSaveToLocalStorage from '../hooks/useSaveToLocalStorage'; // Adjust path as necessary
-import { baseUrl } from '../api';
 import Thumbnails from './Thumbnails'; // Import the Thumbnails component
+import { FaPaperPlane } from 'react-icons/fa'; // Import the icon (Font Awesome example)
+import { baseUrl } from '../api';
 
-const ImageGenerator = ({ theme, setTheme }) => {
+const THEME_LOCAL_STORAGE_KEY = 'theme';
+
+const ImageGenerator = () => {
     const [prompt, setPrompt] = useState('');
     const [aspectRatio, setAspectRatio] = useState('1:1');
     const [usePromptRefiner, setUsePromptRefiner] = useState(true);
@@ -13,6 +15,7 @@ const ImageGenerator = ({ theme, setTheme }) => {
     const [taskId, setTaskId] = useState(null);
     const [images, setImages] = useState([]);
     const [apiKey, setApiKey] = useState('your-api-key-here');
+    const [theme, setTheme] = useState('dark'); // Default theme
 
     const { saveToLocalStorage } = useSaveToLocalStorage();
 
@@ -20,7 +23,11 @@ const ImageGenerator = ({ theme, setTheme }) => {
     useEffect(() => {
         const storedImages = JSON.parse(localStorage.getItem('images')) || [];
         setImages(storedImages.reverse());
-    }, []);
+        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+    }, [theme]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,7 +51,6 @@ const ImageGenerator = ({ theme, setTheme }) => {
             const { status, result } = await getTaskStatus(taskId);
 
             if (status === 'SUCCESS') {
-                // Save the generated image to local storage
                 const { imageUrl, description, refinedPrompt } = result;
 
                 const imageData = {
@@ -55,12 +61,10 @@ const ImageGenerator = ({ theme, setTheme }) => {
                     aspectRatio: aspectRatio
                 };
 
-                // Update local storage
                 const storedImages = JSON.parse(localStorage.getItem('images')) || [];
                 storedImages.push(imageData);
                 localStorage.setItem('images', JSON.stringify(storedImages));
 
-                // Update state
                 setImages(storedImages.reverse());
                 setTaskId(null);
                 setLoading(false);
@@ -86,7 +90,6 @@ const ImageGenerator = ({ theme, setTheme }) => {
 
     return (
         <div className="container">
-            <ThemeSelector theme={theme} setTheme={setTheme} />
             <h1>Generate Images</h1>
             <form id="promptForm" className="form-container" onSubmit={handleSubmit}>
                 <input
@@ -94,7 +97,7 @@ const ImageGenerator = ({ theme, setTheme }) => {
                     id="prompt"
                     name="prompt"
                     autoComplete="off"
-                    className="theme-selector"
+                    className={`theme-selector ${theme}-theme`}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     required
@@ -104,7 +107,7 @@ const ImageGenerator = ({ theme, setTheme }) => {
                     <select
                         id="aspectRatio"
                         name="aspectRatio"
-                        className="dropdown-button theme-selector"
+                        className={`dropdown-button theme-selector ${theme}-theme`}
                         value={aspectRatio}
                         onChange={(e) => setAspectRatio(e.target.value)}
                     >
@@ -124,22 +127,21 @@ const ImageGenerator = ({ theme, setTheme }) => {
                             onChange={() => setUsePromptRefiner(!usePromptRefiner)}
                             className="toggle-checkbox"
                         />
-                        <label htmlFor="usePromptRefiner" className="toggle-label theme-selector">
+                        <label htmlFor="usePromptRefiner" className={`toggle-label theme-selector ${theme}-theme`}>
                             <span className="toggle-slider">
                                 <span className="toggle-text">Prompt Refiner</span>
                             </span>
                         </label>
                     </div>
-                    <button className="theme-selector" type="submit" disabled={loading}>
-                        <span className="button-text">
-                            {loading ? '' : 'Generate'}
-                        </span>
-                        {loading && (
+                    <button className={`send-button theme-selector ${theme}-theme`} type="submit" disabled={loading}>
+                        {loading ? (
                             <div className="loading-dots">
                                 <div className="dot"></div>
                                 <div className="dot"></div>
                                 <div className="dot"></div>
                             </div>
+                        ) : (
+                            <FaPaperPlane size={24} /> // Replace text with icon
                         )}
                     </button>
                 </div>

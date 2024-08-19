@@ -20,9 +20,20 @@ export const deleteImages = async (imageIds) => {
     });
     return response.data;
 };
+const escapeHtml = (text) => {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+    };
+    return text.replace(/[&<>"']/g, (char) => map[char]);
+};
 
 // New function for generate_query endpoint
-export const chat = async (query) => {
-    const response = await axios.post(`${baseUrl}/chat`, { query });
+export const chat = async (query, userId) => {
+    const escapedQuery = escapeHtml(query);
+    const response = await axios.post(`${baseUrl}/chat`, { query: escapedQuery, userId });
     return response.data;
 };

@@ -1,5 +1,5 @@
-// ThemeSelector.js
 import React, { useEffect, useState } from 'react';
+import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for light and dark themes
 
 // Function to apply the theme to the document
 export const applyTheme = (theme) => {
@@ -21,9 +21,13 @@ export const applyTheme = (theme) => {
 };
 
 const ThemeSelector = () => {
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem('theme') || 'light';
-    });
+    // Determine the default theme based on system preferences
+    const getDefaultTheme = () => {
+        const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return localStorage.getItem('theme') || (userPrefersDark ? 'dark' : 'light');
+    };
+
+    const [theme, setTheme] = useState(getDefaultTheme);
 
     useEffect(() => {
         applyTheme(theme);
@@ -41,8 +45,12 @@ const ThemeSelector = () => {
             onChange={handleChange}
             id="themeSelector"
         >
-            <option value="light">Light Theme</option>
-            <option value="dark">Dark Theme</option>
+            <option value="light" className="theme-option">
+                <FaSun /> Light Theme
+            </option>
+            <option value="dark" className="theme-option">
+                <FaMoon /> Dark Theme
+            </option>
         </select>
     );
 };
