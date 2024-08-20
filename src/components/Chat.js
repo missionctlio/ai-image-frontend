@@ -37,12 +37,8 @@ const Chat = () => {
         }
         setUuid(savedUuid);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(messages));
-    }, [theme]);
+    }, [theme, messages]);
     
-    useEffect(() => {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(messages));
-    }, [messages]);
-
     // Adjust textarea height based on content
     const adjustTextareaHeight = () => {
         if (textareaRef.current) {

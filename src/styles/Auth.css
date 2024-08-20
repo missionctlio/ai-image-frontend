@@ -19,10 +19,9 @@
     width: 100%;
 }
 
-h2 {
+.login-box h2 {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #333333;
 }
 
 .modern-google-button {
