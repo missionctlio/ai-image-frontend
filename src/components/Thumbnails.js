@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FullImageViewer from './FullImageViewer';
 import { baseUrl } from '../api';
 import { deleteImages } from '../api';
+import { FaTrash } from 'react-icons/fa'; // Import the trash icon from react-icons/fa
 
 const Thumbnails = ({ images: propImages }) => {
     const [images, setImages] = useState([]);
@@ -61,7 +62,7 @@ const Thumbnails = ({ images: propImages }) => {
                     className={`theme-selector ${theme}-theme clear-images-button`} 
                     onClick={handleClearImages}
                 >
-                    Clear Images
+                    <FaTrash size={24} /> {/* Trash icon */}
                 </button>
             )}
             <div id="thumbnails" className="thumbnails">

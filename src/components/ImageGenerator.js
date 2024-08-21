@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { generateImage, getTaskStatus } from '../api';
 import Thumbnails from './Thumbnails'; // Import the Thumbnails component
+import FullImageViewer from './FullImageViewer'; // Import the FullImageViewer component
 import { FaPaperPlane } from 'react-icons/fa'; // Import the icon (Font Awesome example)
-import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
+import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector';
 
 const ImageGenerator = () => {
     const [prompt, setPrompt] = useState('');
     const [aspectRatio, setAspectRatio] = useState('1:1');
     const [usePromptRefiner, setUsePromptRefiner] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [setTaskId] = useState(null);
     const [images, setImages] = useState([]);
     const [apiKey] = useState('your-api-key-here');
     const [theme, setTheme] = useState('dark'); // Default theme
+    const [selectedImage, setSelectedImage] = useState(null); // State for selected image to view
 
     // Load images from local storage on initial render
     useEffect(() => {
@@ -28,13 +29,16 @@ const ImageGenerator = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { task_id } = await generateImage({ prompt, aspectRatio, usePromptRefiner }, apiKey);
-            setTaskId(task_id);
-            pollTaskStatus(task_id);
+            const { taskId } = await generateImage({ prompt, aspectRatio, usePromptRefiner }, apiKey);
+            pollTaskStatus(taskId);
         } catch (error) {
             alert('Error generating image. Please try again.');
             setLoading(false);
         }
+    };
+
+    const handleCloseFullImageViewer = () => {
+        setSelectedImage(null); // Close the FullImageViewer
     };
 
     const pollTaskStatus = async (taskId, retryCount = 0) => {
@@ -58,10 +62,10 @@ const ImageGenerator = () => {
 
                 const storedImages = JSON.parse(localStorage.getItem('images')) || [];
                 storedImages.push(imageData);
+                setSelectedImage(imageData); // Set the selected image to view
                 localStorage.setItem('images', JSON.stringify(storedImages));
 
                 setImages(storedImages.reverse());
-                setTaskId(null);
                 setLoading(false);
             } else if (status === 'PENDING') {
                 if (retryCount * retryDelay < maxPollDuration) {
@@ -144,6 +148,9 @@ const ImageGenerator = () => {
             <div className="button-container">
             </div>
             <Thumbnails images={images} /> {/* Pass images as a prop */}
+            {selectedImage && (
+                <FullImageViewer image={selectedImage} onClose={handleCloseFullImageViewer} />
+            )}
         </div>
     );
 };
