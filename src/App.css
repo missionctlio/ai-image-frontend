@@ -586,7 +586,6 @@ input[type="text"] {
     border: none; /* Removed border */
     border-radius: 5px;
     background: linear-gradient(145deg, #ffffff, #e6f0ff); /* Light gradient background */
-    color: #333; /* Neutral text color */
     font-size: 1em;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Enhanced depth and shadow */
     transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
@@ -596,6 +595,13 @@ input[type="text"] {
     background: linear-gradient(145deg, #e6f0ff, #ffffff); /* Slightly darker gradient on hover */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
 }
+
+.dark-theme .theme-selector:hover, .dark-theme button:hover, .darktheme .download-button:hover {
+    background: linear-gradient(145deg, #333, #444); /* Slightly darker gradient on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+}
+
+
 
 .theme-selector option {
     background: #ffffff;
@@ -617,13 +623,13 @@ input[type="text"] {
 }
 
 /* Light Theme Styles */
-body.light-theme {
+.light-theme {
     background: linear-gradient(145deg, #fefeff, #f3f3f3); /* Pearlescent gradient background */
     color: #333;
 }
 
 /* Dark Theme Styles */
-body.dark-theme {
+.dark-theme {
     background: linear-gradient(145deg, #333, #1a1a1a); /* Dark gray gradient background */
     color: #f1f1f1;
 }

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { baseUrl } from '../api';
+import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector';
 
 const FullImageViewer = ({ image, onClose }) => {
-    const [showPrompt, setShowPrompt] = useState(true);
-    const [showDescription, setShowDescription] = useState(false);
-    const [showAspectRatio, setShowAspectRatio] = useState(false);
+    // State to track which section is active
+    const [activeSection, setActiveSection] = useState('prompt');
+    const [theme, setTheme] = useState('dark'); // Default theme
 
     const handleCopyPrompt = () => {
         document.getElementById('prompt').value = image.prompt;
@@ -12,7 +13,6 @@ const FullImageViewer = ({ image, onClose }) => {
     };
 
     const handleDownloadImage = () => {
-        // Create a Blob from the image URL to ensure the browser downloads the image
         fetch(`${baseUrl}${image.imageUrl.replace(/original_/i, '')}`)
             .then(response => response.blob())
             .then(blob => {
@@ -27,38 +27,55 @@ const FullImageViewer = ({ image, onClose }) => {
             })
             .catch(err => console.error('Failed to download image:', err));
     };
-    const togglePrompt = () => setShowPrompt(prev => !prev);
-    const toggleDescription = () => setShowDescription(prev => !prev);
-    const toggleAspectRatio = () => setShowAspectRatio(prev => !prev);
+
+    const toggleSection = (section) => {
+        setActiveSection(prev => prev === section ? null : section);
+    };
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+    }, []);
 
     return (
-        <div className="full-image-overlay" onClick={(e) => {
+        <div className={`full-image-overlay`} onClick={(e) => {
             if (e.target === e.currentTarget) {
                 onClose();
             }
         }}>
-            <div className="full-image-container">
-                <div className="close-button" onClick={onClose}>×</div>
-                <img src={`${baseUrl}${image.imageUrl}`} alt="Full Image" className="full-image-img" />
-                <div className="text-container">
-                    <div className="toggle-container">
-                        <button className="toggle-button" onClick={togglePrompt}>
-                            {showPrompt ? 'Hide Prompt Details' : 'Show Prompt'}
+            <div className={`full-image-container ${theme}-theme`}>
+                <div className={`close-button ${theme}-theme`} onClick={onClose}>×</div>
+                <img src={`${baseUrl}${image.imageUrl}`} alt={`${image.prompt}`} className={`full-image-img ${theme}-theme`} />
+                <div className={`text-container`}>
+                    <div className={`toggle-container`}>
+                        <button
+                            className={`toggle-button ${theme}-theme`}
+                            onClick={() => toggleSection('prompt')}
+                        >
+                            {activeSection === 'prompt' ? 'Hide Prompt Details' : 'Show Prompt'}
                         </button>
-                        <button className="toggle-button" onClick={toggleDescription}>
-                            {showDescription ? 'Hide Description' : 'Show Description'}
+                        <button
+                            className={`toggle-button ${theme}-theme`}
+                            onClick={() => toggleSection('description')}
+                        >
+                            {activeSection === 'description' ? 'Hide Description' : 'Show Description'}
                         </button>
-                        <button className="toggle-button" onClick={toggleAspectRatio}>
-                            {showAspectRatio ? 'Hide Aspect Ratio' : 'Show Aspect Ratio'}
+                        <button
+                            className={`toggle-button ${theme}-theme`}
+                            onClick={() => toggleSection('aspectRatio')}
+                        >
+                            {activeSection === 'aspectRatio' ? 'Hide Aspect Ratio' : 'Show Aspect Ratio'}
                         </button>
-                        <button className="download-button" onClick={handleDownloadImage}>
+                        <button className={`download-button ${theme}-theme`} onClick={handleDownloadImage}>
                             Download Image
                         </button>
                     </div>
-                    <div className="text-info-container">
-                        {showPrompt && (
-                            <div className="full-image-prompt">
-                                <button className="copy-button" onClick={handleCopyPrompt} title="Copy Prompt">
+                    <div className={`text-info-container`}>
+                        {activeSection === 'prompt' && (
+                            <div className={`full-image-prompt ${theme}-theme`}>
+                                <button className={`copy-button ${theme}-theme`} onClick={handleCopyPrompt} title="Copy Prompt">
                                     📋
                                 </button>
                                 <br />
@@ -76,15 +93,15 @@ const FullImageViewer = ({ image, onClose }) => {
                                 )}
                             </div>
                         )}
-                        {showDescription && (
-                            <div className="full-image-description">
+                        {activeSection === 'description' && (
+                            <div className={`full-image-description ${theme}-theme`}>
                                 <strong>Description</strong>
                                 <hr />
                                 {image.description}
                             </div>
                         )}
-                        {showAspectRatio && (
-                            <div className="full-image-aspect-ratio">
+                        {activeSection === 'aspectRatio' && (
+                            <div className={`full-image-aspect-ratio ${theme}-theme`}>
                                 <strong>Aspect Ratio</strong>
                                 <hr />
                                 {image.aspectRatio}

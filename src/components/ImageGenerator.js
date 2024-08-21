@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { generateImage, getTaskStatus } from '../api';
-import useSaveToLocalStorage from '../hooks/useSaveToLocalStorage'; // Adjust path as necessary
 import Thumbnails from './Thumbnails'; // Import the Thumbnails component
 import { FaPaperPlane } from 'react-icons/fa'; // Import the icon (Font Awesome example)
 import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
@@ -10,12 +9,10 @@ const ImageGenerator = () => {
     const [aspectRatio, setAspectRatio] = useState('1:1');
     const [usePromptRefiner, setUsePromptRefiner] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [taskId, setTaskId] = useState(null);
+    const [setTaskId] = useState(null);
     const [images, setImages] = useState([]);
-    const [apiKey, setApiKey] = useState('your-api-key-here');
+    const [apiKey] = useState('your-api-key-here');
     const [theme, setTheme] = useState('dark'); // Default theme
-
-    const { saveToLocalStorage } = useSaveToLocalStorage();
 
     // Load images from local storage on initial render
     useEffect(() => {
