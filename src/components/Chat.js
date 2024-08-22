@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import gfm from 'remark-gfm';
-import { chat } from '../api';
+import Markdown from 'https://esm.sh/react-markdown@latest'; // Import react-markdown from esm.sh
+import { chatStream } from '../api';
 import '../styles/Chat.css'; // Import CSS for Chat component styling
 import { AiOutlineSend } from 'react-icons/ai'; // Import send icon from react-icons
+import { FaSpinner } from 'react-icons/fa'; // Import spinner icon for loading state
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
-import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
-
+import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector';
+import remarkGfm from 'https://esm.sh/remark-gfm@latest'; // Import remark-gfm from esm.sh
+import { Prism as SyntaxHighlighter } from 'https://esm.sh/react-syntax-highlighter@latest'; // Import SyntaxHighlighter from esm.sh
+import { materialDark } from 'https://esm.sh/react-syntax-highlighter@latest/dist/esm/styles/prism'; // Import Prism styles from esm.sh
+import { materialLight } from 'https://esm.sh/react-syntax-highlighter@latest/dist/esm/styles/prism'; // Import Prism styles from esm.sh
 const LOCAL_STORAGE_KEY = 'chatMessages';
 const UUID_LOCAL_STORAGE_KEY = 'UserId'; // Key for storing UUID in localStorage
 
@@ -17,18 +20,14 @@ const Chat = () => {
     const [error, setError] = useState(null);
     const [theme, setTheme] = useState('dark'); // Default theme
     const [uuid, setUuid] = useState(null); // State to store UUID
+    const [firstChunkReceived, setFirstChunkReceived] = useState(false); // New state to track first chunk
     const textareaRef = useRef(null);
-    const messagesEndRef = useRef(true);
+    const messagesEndRef = useRef(null);
 
     // Load messages, theme, and UUID from localStorage on initial render
     useEffect(() => {
         const savedMessages = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
         setMessages(savedMessages);
-
-        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
-        if (savedTheme) {
-            setTheme(savedTheme);
-        }
 
         let savedUuid = localStorage.getItem(UUID_LOCAL_STORAGE_KEY);
         if (!savedUuid) {
@@ -36,9 +35,19 @@ const Chat = () => {
             localStorage.setItem(UUID_LOCAL_STORAGE_KEY, savedUuid);
         }
         setUuid(savedUuid);
+    }, []);
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+    }, []);
+
+    useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(messages));
-    }, [theme, messages]);
-    
+    }, [messages]);
+
     // Adjust textarea height based on content
     const adjustTextareaHeight = () => {
         if (textareaRef.current) {
@@ -78,44 +87,95 @@ const Chat = () => {
         const newMessages = [
             ...messages,
             { text: userQuery, type: 'user' },
+            { text: '', type: 'bot', isLoading: true }, // Placeholder for the bot response
         ];
         setMessages(newMessages);
-        setLoading(true);
         setError(null);
+        setFirstChunkReceived(false); // Reset state for new request
 
         try {
-            const result = await chat(userQuery, uuid); // Pass UUID to chat function
-            setMessages([
-                ...newMessages,
-                { text: result.response, type: 'bot' },
-            ]);
+            const eventSource = chatStream(userQuery, uuid, (chunk) => {
+                setMessages((prevMessages) => {
+                    const lastMessageIndex = prevMessages.length - 1;
+                    const lastMessage = prevMessages[lastMessageIndex];
+
+                    // Update the last bot message with the new chunk
+                    const updatedMessages = [...prevMessages];
+                    updatedMessages[lastMessageIndex] = {
+                        ...lastMessage,
+                        text: (lastMessage.text || '') + chunk,
+                        isLoading: true, // Indicate that the message is still loading
+                    };
+
+                    return updatedMessages;
+                });
+
+                // Set the state to true once the first chunk is received
+                if (!firstChunkReceived) {
+                    setFirstChunkReceived(true);
+                }
+            });
+
+            eventSource.onopen = () => {
+                setLoading(true);
+                // Optionally handle connection open state
+            };
+
+            eventSource.onclose = () => {
+                setLoading(false);
+                setUserQuery(''); // Clear input field
+
+                // Mark the last message as complete
+                setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages];
+                    const lastMessageIndex = prevMessages.length - 1;
+                    if (lastMessageIndex >= 0) {
+                        updatedMessages[lastMessageIndex] = {
+                            ...updatedMessages[lastMessageIndex],
+                            isLoading: false,
+                        };
+                    }
+                    return updatedMessages;
+                });
+            };
+
+            eventSource.onerror = (err) => {
+                setError('Error fetching response');
+                setLoading(false);
+                eventSource.close();
+            };
         } catch (err) {
             setError('Error fetching response');
-        } finally {
             setLoading(false);
-            setUserQuery(''); // Clear input field
         }
     };
 
     return (
-        <div className={`chat-container ${theme}`}> {/* Apply theme class */}
-            <div className={`chat-messages ${theme}`}>
+        <div className={`chat-container `}> {/* Apply theme class */}
+            <div className={`chat-messages ${theme}-theme`}>
+                {loading && (
+                    <div className="loading-icon">
+                        <FaSpinner size={24} className="spinner" /> {/* Loading spinner */}
+                    </div>
+                )}
                 {messages.slice().reverse().map((message, index) => (
                     <div
                         key={index}
-                        className={`message ${message.type}-message theme-selector ${theme}-theme`}
+                        className={`message ${message.type}-message ${theme}-theme`}
                     >
-                        <ReactMarkdown
-                            remarkPlugins={[gfm]}
+                        <Markdown
                             components={{
-                                code({ node, inline, className, children, ...props }) {
+                                code: ({node, inline, className, children, ...props}) => {
                                     const match = /language-(\w+)/.exec(className || '');
                                     return !inline && match ? (
-                                        <pre>
-                                            <code className={className} {...props}>
-                                                {children}
-                                            </code>
-                                        </pre>
+                                        <SyntaxHighlighter
+                                            language={match[1]}
+                                            style={materialDark} // You can change the style if needed
+                                            PreTag="div"
+                                            {...props}
+                                        >
+                                            {String(children).replace(/\n$/, '')}
+                                        </SyntaxHighlighter>
                                     ) : (
                                         <code className={className} {...props}>
                                             {children}
@@ -123,16 +183,18 @@ const Chat = () => {
                                     );
                                 },
                             }}
+                            remarkPlugins={[remarkGfm]}
+                            className={`markdown ${theme}-theme`}
                         >
-                            {message.text}
-                        </ReactMarkdown>
+                            {message.text || ''}
+                        </Markdown>
                     </div>
                 ))}
             </div>
 
-            <div ref={messagesEndRef} className={`input-container ${theme}`}>
+            <div ref={messagesEndRef} className={`input-container ${theme}-theme`}>
                 <textarea
-                    className={`theme-selector ${theme}-theme`}
+                    className={`textarea theme-selector ${theme}-theme`}
                     value={userQuery}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown} // Add key down event listener
@@ -143,7 +205,7 @@ const Chat = () => {
                     type="button"
                     onClick={handleSubmit}
                     disabled={loading}
-                    className={`send-button theme-selector ${theme}-theme`}
+                    className={`send-button ${theme}-theme`}
                 >
                     <AiOutlineSend size={24} /> {/* Send icon */}
                 </button>
