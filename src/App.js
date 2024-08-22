@@ -1,46 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from './components/Auth';
+import React from 'react';
+import useApp from './hooks/useApp'; // Import the custom hook
+import useTheme from './hooks/useTheme';
 import ImageGenerator from './components/ImageGenerator';
 import ThemeSelector from './components/ThemeSelector';
 import Chat from './components/Chat';
 import Profile from './components/Profile'; // Import the Profile component
 import './App.css'; 
-import { THEME_LOCAL_STORAGE_KEY } from './components/ThemeSelector';
 
 function App() {
-    const { user, login, logout } = useAuth();
-    const [theme, setTheme] = useState('dark'); // Default theme
-    const [selectedComponent, setSelectedComponent] = useState('imageGenerator');
-    const [showProfile, setShowProfile] = useState(false); // State to toggle Profile component
-
-    // Load the selectedComponent from localStorage on initial render
-    useEffect(() => {
-        const savedComponent = localStorage.getItem('selectedComponent');
-        if (savedComponent) {
-            setSelectedComponent(savedComponent);
-        }
-    }, []); // Empty dependency array means this runs only on initial render
-
-    // Load the theme from localStorage on initial render
-    useEffect(() => { 
-        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
-        if (savedTheme) {
-            setTheme(savedTheme);
-        }
-    }, []); // Empty dependency array means this runs only on initial render
-
-    const handleComponentChange = (event) => {
-        const newValue = event.target.value;
-        setSelectedComponent(newValue);
-        if (newValue !== 'Component') {
-            localStorage.setItem('selectedComponent', newValue);
-        }
-    };
-
-    const toggleProfile = () => {
-        setShowProfile(prevState => !prevState);
-    };
-
+    const {
+        user,
+        selectedComponent,
+        setSelectedComponent,
+        showProfile,
+        handleComponentChange,
+        toggleProfile,
+        login,
+        logout
+    } = useApp();
+    const { theme, setTheme } = useTheme();
     return (
         <div className={`app-container ${theme}`}>
             {user ? (
@@ -64,7 +42,7 @@ function App() {
                         </button>
                         {/* Overlay for Profile component */}
                         {showProfile && (
-                            <div className={`profile-overlay theme-selector ${theme}-theme`}>
+                            <div className={`profile-overlay ${theme}-theme`}>
                                 <Profile user={user} theme={theme} setTheme={setTheme} />
                             </div>
                         )}

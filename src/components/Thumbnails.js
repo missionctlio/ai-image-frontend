@@ -1,59 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import FullImageViewer from './FullImageViewer';
-import { baseUrl } from '../api';
-import { deleteImages } from '../api';
 import { FaTrash } from 'react-icons/fa'; // Import the trash icon from react-icons/fa
+import useThumbnails from '../hooks/useThumbnails'; // Import useThumbnails hook
+import useTheme from '../hooks/useTheme'; // Import useTheme hook
+import { baseUrl } from '../api';
 
 const Thumbnails = ({ images: propImages }) => {
-    const [images, setImages] = useState([]);
-    const [showClearButton, setShowClearButton] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
-
-    useEffect(() => {
-        if (propImages) {
-            setImages(propImages);
-            setShowClearButton(propImages.length > 0);
-        }
-    }, [propImages]);
-
-    const handleClearImages = async () => {
-        const imageIds = images.map(image => {
-            const imageUrl = image.imageUrl;
-            return imageUrl.split('/').pop().replace('original_', '');
-        });
-
-        await deleteImages(imageIds);
-
-        localStorage.removeItem('images');
-        setImages([]);
-        setShowClearButton(false);
-    };
-
-    const handleImageClick = (image) => {
-        setSelectedImage(image);
-    };
-
-    const handleCloseViewer = () => {
-        setSelectedImage(null);
-    };
-
-    const deleteImage = async (imageToDelete) => {
-        const index = images.findIndex(img => img.imageUrl === imageToDelete.imageUrl);
-
-        if (index !== -1) {
-            const imageUrl = images[index].imageUrl;
-            const imageId = imageUrl.split('/').pop().replace('original_', '');
-
-            await deleteImages([imageId]);
-
-            const updatedImages = images.filter((_, i) => i !== index);
-            localStorage.setItem('images', JSON.stringify(updatedImages));
-            setImages(updatedImages);
-        }
-    };
-
-    const theme = localStorage.getItem('theme') || 'light';
-    
+    const {
+        images,
+        showClearButton,
+        selectedImage,
+        handleClearImages,
+        handleImageClick,
+        handleCloseViewer,
+        deleteImage
+    } = useThumbnails(propImages);
+    const { theme } = useTheme();
     return (
         <div id="thumbnails-container">
             {showClearButton && (

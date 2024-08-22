@@ -3,18 +3,10 @@ import { AiOutlineCopy } from 'react-icons/ai';
 import { Prism as SyntaxHighlighter } from 'https://esm.sh/react-syntax-highlighter@latest';
 import { materialDark } from 'https://esm.sh/react-syntax-highlighter@latest/dist/esm/styles/prism';
 import '../styles/CodeBlock.css'; // Import the CSS
-import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector';
+import useTheme from '../hooks/useTheme'; // Import useTheme hook
 
 const CodeBlock = ({ language, value }) => {
-    const [theme, setTheme] = useState('dark'); // Default theme
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
-        if (savedTheme) {
-            setTheme(savedTheme);
-        }
-      }, [theme]);
-
+    const { theme } = useTheme();
     const copyToClipboard = () => {
         navigator.clipboard.writeText(value);
     };

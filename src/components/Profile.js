@@ -1,29 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector'
+import React from 'react';
+import useProfile from '../hooks/useProfile'; // Import the custom hook
+import useTheme from '../hooks/useTheme'; // Import useTheme hook
 import "../styles/Profile.css";
+
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState('dark'); // Default theme
-  // Fetch user data from local storage or props
-  useEffect(() => {
-    const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
-    if (savedTheme) {
-        setTheme(savedTheme);
-    }
+    const { user } = useProfile(); // Use the hook to get user data and theme
+    const { theme } = useTheme();
 
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      setUser(userData);
-    }
-  }, [theme]);
-
-  return (
-    <div className={`user-profile`}>
-      <img src={user?.picture} alt={`${user?.name}'s profile`} className="profile-pic" />
-      <h2>{user?.name}</h2>
-      <p>Email: {user?.email}</p>
-    </div>
-  );
+    return (
+        <div className={`user-profile ${theme}-theme`}>
+            <img src={user?.picture} alt={`${user?.name}'s profile`} className="profile-pic" />
+            <h2>{user?.name}</h2>
+            <p>Email: {user?.email}</p>
+        </div>
+    );
 };
 
 export default Profile;

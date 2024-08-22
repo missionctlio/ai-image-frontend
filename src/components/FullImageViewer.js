@@ -1,43 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import useTheme from '../hooks/useTheme'; // Import useTheme hook
+import useFullImageViewer from '../hooks/useFullImageViewer'; // Import the consolidated hook
 import { baseUrl } from '../api';
-import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector';
 
 const FullImageViewer = ({ image, onClose }) => {
-    // State to track which section is active
-    const [activeSection, setActiveSection] = useState('prompt');
-    const [theme, setTheme] = useState('dark'); // Default theme
-
-    const handleCopyPrompt = () => {
-        document.getElementById('prompt').value = image.prompt;
-        onClose(); // Close the overlay
-    };
-
-    const handleDownloadImage = () => {
-        fetch(`${baseUrl}${image.imageUrl.replace(/original_/i, '')}`)
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `image_${Date.now()}.png`;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                window.URL.revokeObjectURL(url); // Clean up
-            })
-            .catch(err => console.error('Failed to download image:', err));
-    };
-
-    const toggleSection = (section) => {
-        setActiveSection(prev => prev === section ? null : section);
-    };
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem(THEME_LOCAL_STORAGE_KEY);
-        if (savedTheme) {
-            setTheme(savedTheme);
-        }
-    }, []);
+    const { theme } = useTheme();
+    const { activeSection, toggleSection, downloadImage, copyPrompt } = useFullImageViewer(image, onClose);
 
     return (
         <div className={`full-image-overlay`} onClick={(e) => {
@@ -68,14 +36,14 @@ const FullImageViewer = ({ image, onClose }) => {
                         >
                             {activeSection === 'aspectRatio' ? 'Hide Aspect Ratio' : 'Show Aspect Ratio'}
                         </button>
-                        <button className={`download-button ${theme}-theme`} onClick={handleDownloadImage}>
+                        <button className={`download-button ${theme}-theme`} onClick={downloadImage}>
                             Download Image
                         </button>
                     </div>
                     <div className={`text-info-container`}>
                         {activeSection === 'prompt' && (
                             <div className={`full-image-prompt ${theme}-theme`}>
-                                <button className={`copy-button ${theme}-theme`} onClick={handleCopyPrompt} title="Copy Prompt">
+                                <button className={`copy-button ${theme}-theme`} onClick={copyPrompt} title="Copy Prompt">
                                     📋
                                 </button>
                                 <br />
