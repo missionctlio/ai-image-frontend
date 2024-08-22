@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = 'http://aesync.servebeer.com:8888';
+export const baseUrl = window.location.origin.replace(':3000', ':8888');
 
 export const generateDescription = async (userPrompt, apiKey) => {
     try {
