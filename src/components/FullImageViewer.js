@@ -47,7 +47,7 @@ const FullImageViewer = ({ image, onClose }) => {
                                     📋
                                 </button>
                                 <br />
-                                <strong>Original Prompt</strong>
+                                <strong>Prompt</strong>
                                 <hr />
                                 {image.prompt}
                                 <br />

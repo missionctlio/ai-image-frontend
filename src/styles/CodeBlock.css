@@ -25,6 +25,8 @@
 /* Copy button styling */
 .codeblock-copy-button {
     position: absolute;
+    width: auto;
+    height: auto;
     top: 10px;
     right: 10px;
     background: none;
