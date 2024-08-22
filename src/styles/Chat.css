@@ -141,10 +141,16 @@ textarea {
         min-height: 40px; /* Adjust height for better fit */
         max-width: calc(100% - 80px); /* Ensure textarea does not overflow with buttons */
     }
-
+    .message {
+        font-size: 0.8em;
+    }
     .send-button, .stop-button, .clear-button {
         width: 35px; /* Slightly smaller button size */
         height: 35px; /* Slightly smaller button size */
         font-size: 1em; /* Adjust icon size */
+    }
+    
+    .message pre {
+        overflow-x: auto; /* Enable horizontal scrolling for code blocks */
     }
 }

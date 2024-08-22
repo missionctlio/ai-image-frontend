@@ -7,8 +7,7 @@ import { FaSpinner, FaStop, FaTrash } from 'react-icons/fa'; // Import stop and 
 import { v4 as uuidv4 } from 'uuid';
 import { THEME_LOCAL_STORAGE_KEY } from './ThemeSelector';
 import remarkGfm from 'https://esm.sh/remark-gfm@latest';
-import { Prism as SyntaxHighlighter } from 'https://esm.sh/react-syntax-highlighter@latest';
-import { materialDark } from 'https://esm.sh/react-syntax-highlighter@latest/dist/esm/styles/prism';
+import CodeBlock from './CodeBlock'; // Import CodeBlock
 
 const LOCAL_STORAGE_KEY = 'chatMessages';
 const UUID_LOCAL_STORAGE_KEY = 'UserId';
@@ -179,15 +178,12 @@ const Chat = () => {
                             components={{
                                 code: ({ node, inline, className, children, ...props }) => {
                                     const match = /language-(\w+)/.exec(className || '');
-                                    return !inline && match ? (
-                                        <SyntaxHighlighter
-                                            language={match[1]}
-                                            style={materialDark}
-                                            PreTag="div"
-                                            {...props}
-                                        >
-                                            {String(children).replace(/\n$/, '')}
-                                        </SyntaxHighlighter>
+                                    const language = match ? match[1] : '';
+                                    return !inline && language ? (
+                                        <CodeBlock
+                                            language={language}
+                                            value={String(children).replace(/\n$/, '')}
+                                        />
                                     ) : (
                                         <code className={className} {...props}>
                                             {children}
