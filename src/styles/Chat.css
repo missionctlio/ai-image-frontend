@@ -81,3 +81,50 @@ textarea {
 
 /* Import Prism CSS from CDN */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-dracula.min.css');
+
+/* Container for the loading spinner */
+.loading-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+/* Styling for the spinner icon */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Keyframes for the spinner animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.stop-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+
+.stop-button:hover {
+    color: #c53030; /* Darker red on hover */
+}
+
+
+.clear-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.clear-button:hover {
+    color: #dc3545;
+}

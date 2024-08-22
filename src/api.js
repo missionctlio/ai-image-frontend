@@ -32,41 +32,9 @@ const escapeHtml = (text) => {
     return text.replace(/[&<>"']/g, (char) => map[char]);
 };
 
-// Function for chat endpoint with streaming support via POST
-export const chatStream = (query, userId, onMessage) => {
-    const escapedQuery = escapeHtml(query);
-    const body = JSON.stringify({ query: escapedQuery, userId });
-
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    fetch(`${baseUrl}/chat`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body,
-        signal,
-    })
-    .then(response => {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-
-        return reader.read().then(function processText({ done, value }) {
-            if (done) {
-                return;
-            }
-            const chunk = decoder.decode(value, { stream: true });
-            onMessage(chunk);
-
-            return reader.read().then(processText);
-        });
-    })
-    .catch(error => {
-        console.error('Error with chat stream:', error);
-    });
-
-    return () => controller.abort(); // Return a function to abort the request
+export const createChatWebSocket = (userId) => {
+    const wsUrl = `${baseUrl.replace('http', 'ws')}/ws/chat?userId=${userId}`;
+    return new WebSocket(wsUrl);
 };
 
 // Fetch user data (for checking if the user is logged in)
