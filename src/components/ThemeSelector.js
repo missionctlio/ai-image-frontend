@@ -39,10 +39,10 @@ const ThemeSelector = () => {
             id="themeSelector"
         >
             <option value="light" className="theme-option">
-                <FaSun /> Light Theme
+                Light Theme
             </option>
             <option value="dark" className="theme-option">
-                <FaMoon /> Dark Theme
+                Dark Theme
             </option>
         </select>
     );

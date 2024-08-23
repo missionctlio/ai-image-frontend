@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = window.location.origin.replace(':3000', ':8888');
-
+export const baseUrl = 'https://dev.aesync.com';
 export const generateDescription = async (userPrompt, apiKey) => {
     try {
         const response = await axios.post(`${baseUrl}/inference/language/generate-description`, 
@@ -88,7 +87,7 @@ export const deleteImages = async (imageIds) => {
 };
 
 export const createChatWebSocket = (userId) => {
-    const wsUrl = `${baseUrl.replace('http', 'ws')}/inference/language/ws/chat?userId=${userId}`;
+    const wsUrl = `wss://dev.aesync.com/inference/language/ws/chat?userId=${userId}`;
     return new WebSocket(wsUrl);
 };
 

@@ -1,4 +1,6 @@
 # Logs
+*.pem
+nginx/certs
 logs
 *.log
 npm-debug.log*

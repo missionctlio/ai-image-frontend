@@ -1,6 +1,32 @@
 version: '3'
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/letsencrypt
+      - ./nginx/var/www/html:/var/www/html
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - certbot
+      - frontend
+    networks:
+      - nginx-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./nginx/certs:/etc/letsencrypt
+      - ./nginx/var/www/html:/var/www/html
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'
+    networks:
+      - nginx-network
+
   frontend:
     build:
       context: ./
@@ -12,3 +38,9 @@ services:
       - /app/node_modules  # Prevents overwriting node_modules in the container
     environment:
       - CHOKIDAR_USEPOLLING=true  # Ensure file changes are detected inside Docker
+    networks:
+      - nginx-network
+
+networks:
+  nginx-network:
+    driver: bridge

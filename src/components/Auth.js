@@ -23,19 +23,44 @@ export const useAuth = () => {
             throw new Error('Failed to fetch user info');
         }
     };
-
+    const isAllowedEmail = (email) => {
+        const allowed = ['aarlouski.dev@gmail.com', 'aesync.com','emptyset.io', 'emptysetmedia.com', 'bryanlokey.com', 'gravenste.in'];
+    
+        // Extract domain from email if it's a full email address
+        const emailDomain = email.includes('@') ? email.split('@')[1] : email;
+    
+        return allowed.some(allowedItem => {
+            // Check if allowed item is a full email address or a domain
+            if (allowedItem.includes('@')) {
+                return allowedItem === email;
+            } else {
+                return allowedItem === emailDomain;
+            }
+        });
+    };
+    
+    
     const handleLoginSuccess = async (tokenResponse) => {
+        console.log("wtfwtfwtf")
         try {
             const userInfo = await getUserInfo(tokenResponse.access_token);
-            setUser(userInfo);
-            localStorage.setItem('user', JSON.stringify(userInfo));
+            if (isAllowedEmail(userInfo.email)) {
+                setUser(userInfo);
+                localStorage.setItem('user', JSON.stringify(userInfo));
+            } else {
+                setUser(null);
+
+                handleLoginError(new Error('Unauthorized user'), userInfo);
+            }
         } catch (error) {
             handleLoginError(error);
         }
     };
 
-    const handleLoginError = (error) => {
+
+    const handleLoginError = (error, userInfo) => {
         console.error('Login Failed:', error);
+        alert('Unauthorized user: ' + userInfo.email);
     };
 
     const login = useGoogleLogin({
