@@ -24,31 +24,29 @@ const useImageGenerator = (apiKey) => {
         setLoading(true);
 
         try {
-            // Check if there is a prompt element and update the prompt state
+            // Get the prompt from the element or use the current state
             const promptElement = document.getElementById('prompt');
-            const promptFromElement = promptElement ? promptElement.value : '';
-            const usedPrompt = promptFromElement || prompt;
-
+            const basePrompt = promptElement ? promptElement.value : prompt;
+        
             // Fetch description data
-            const descriptionData = await pollForResult(() => generateDescription({ prompt: usedPrompt }), 3, 5000);
-            let refinedPromptData = '';
-
-            // Fetch refined prompt if needed
-            if (usePromptRefiner) {
-                refinedPromptData = await pollForResult(() => generateRefinedPrompt({ prompt: usedPrompt }), 3, 5000);
-                usedPrompt = refinedPromptData || usedPrompt;
-            }
-
+            const descriptionData = await pollForResult(() => generateDescription({ prompt: basePrompt }), 3, 5000);
+        
+            // Refine the prompt if needed
+            const finalPrompt = usePromptRefiner
+                ? await pollForResult(() => generateRefinedPrompt({ prompt: basePrompt }), 3, 5000) || basePrompt
+                : basePrompt;
+        
             // Generate the image
-            const { taskId } = await generateImage({ userPrompt: usedPrompt, aspectRatio }, apiKey);
-
+            const { taskId } = await generateImage({ userPrompt: finalPrompt, aspectRatio }, apiKey);
+        
             // Poll for the task status
             const imageResult = await pollForResult(() => getTaskStatus(taskId), 100, 5000);
-
+        
             // Store and set the image
             const imageData = {
                 imageUrl: imageResult.result.imageUrl,
-                prompt: usedPrompt,
+                prompt: basePrompt,
+                refinedPrompt: finalPrompt !== basePrompt ? finalPrompt : null,
                 description: descriptionData,
                 aspectRatio: aspectRatio
             };
