@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { baseUrl } from '../api';
 
-const useFullImageViewer = (image, onClose) => {
+const useFullImageViewer = (selectedImage, onClose) => {
     const [activeSection, setActiveSection] = useState('prompt');
 
     const downloadImage = () => {
-        fetch(`${baseUrl}${image.imageUrl.replace(/original_/i, '')}`)
+        fetch(selectedImage.imageUrl)
             .then(response => response.blob())
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
@@ -21,7 +20,24 @@ const useFullImageViewer = (image, onClose) => {
     };
 
     const copyPrompt = () => {
-        document.getElementById('prompt').value = image.prompt;
+        if (selectedImage && selectedImage.prompt) {
+            const promptElement = document.getElementById('prompt');
+            if (promptElement) {
+                try {
+                    navigator.clipboard.writeText(selectedImage.prompt).then(() => {
+                        // Set the value of the prompt element
+                        promptElement.value = selectedImage.prompt;
+                        console.log('Prompt copied to clipboard and set in the element!');
+                    });
+                } catch (err) {
+                    console.error('Failed to copy prompt:', err);
+                }
+            } else {
+                console.error('Prompt element not found');
+            }
+        } else {
+            console.error('Selected image or prompt is not available');
+        }
         onClose(); // Close the overlay
     };
 

@@ -41,7 +41,6 @@ export const useAuth = () => {
     
     
     const handleLoginSuccess = async (tokenResponse) => {
-        console.log("wtfwtfwtf")
         try {
             const userInfo = await getUserInfo(tokenResponse.access_token);
             if (isAllowedEmail(userInfo.email)) {
