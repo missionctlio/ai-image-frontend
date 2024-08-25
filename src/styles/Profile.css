@@ -1,16 +1,106 @@
-/* CSS for the profile overlay */
-.profile-overlay {
-    position: absolute;
-    top: 0px; /* Position directly below the button */
-    left:0px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 15px;
+/* src/styles/NavBar.css */
+
+.navbar-container {
+    background-color: #0284c7;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.burger-menu {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    display: none;
+    cursor: pointer;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar-item {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-item:hover {
+    background-color: #0369a1;
     border-radius: 4px;
-    z-index: 1000; /* Ensure it's on top of other content */
-  }
-  
-  .profile-overlay .profile-pic {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
+}
+
+.settings-overlay {
+    position: absolute;
+    top: 60px;
+    right: 1rem;
+    background-color: white;
+    color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    z-index: 1000;
+    min-width: 150px;
+}
+
+.settings-overlay .navbar-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+
+.profile-overlay {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    position: relative;
+    top: 0; /* Align right below the settings */
+    left: 0;
+    width: 100%;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .navbar-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background-color: #0284c7;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .navbar-menu.open {
+        display: flex;
+    }
+
+    .burger-menu {
+        display: block;
+    }
+
+    .navbar-item {
+        width: 100%;
+        text-align: left;
+        padding: 1rem;
+    }
+}

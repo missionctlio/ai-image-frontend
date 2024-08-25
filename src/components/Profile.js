@@ -1,17 +1,17 @@
 import React from 'react';
-import useProfile from '../hooks/useProfile'; // Import the custom hook
-import useTheme from '../hooks/useTheme'; // Import useTheme hook
-import "../styles/Profile.css";
+import '../styles/Profile.css';
 
-const Profile = () => {
-    const { user } = useProfile(); // Use the hook to get user data and theme
-    const { theme } = useTheme();
+const Profile = ({ user, theme }) => {
+    if (!user) {
+        return <div className={`profile-container ${theme}-theme`}>No user data available.</div>;
+    }
 
     return (
-        <div className={`user-profile ${theme}-theme`}>
-            <img src={user?.picture} alt={`${user?.name}'s profile`} className="profile-pic" />
-            <h2>{user?.name}</h2>
-            <p>Email: {user?.email}</p>
+        <div className={`profile-container ${theme}-theme`}>
+            <h2>{user.name}'s Profile</h2>
+            <p><strong>Name:</strong> {user.name}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <img src={user.picture} alt="Profile" className="profile-picture" />
         </div>
     );
 };

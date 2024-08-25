@@ -4,9 +4,8 @@ import { useAuth } from '../components/Auth';
 const useApp = () => {
     const { user, login, logout } = useAuth();
     const [selectedComponent, setSelectedComponent] = useState('imageGenerator');
-    const [showProfile, setShowProfile] = useState(false); // State to toggle Profile component
+    const [showProfile, setShowProfile] = useState(false);
 
-    // Load the selectedComponent from localStorage on initial render
     useEffect(() => {
         const savedComponent = localStorage.getItem('selectedComponent');
         if (savedComponent) {
@@ -14,12 +13,10 @@ const useApp = () => {
         }
     }, []);
 
-    const handleComponentChange = (event) => {
-        const newValue = event.target.value;
-        setSelectedComponent(newValue);
-        if (newValue !== 'Component') {
-            localStorage.setItem('selectedComponent', newValue);
-        }
+    const handleComponentChange = (component) => {
+        setSelectedComponent(component);
+        localStorage.setItem('selectedComponent', component);
+        setShowProfile(false);  // Hide profile if component changes
     };
 
     const toggleProfile = () => {

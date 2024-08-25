@@ -1,0 +1,70 @@
+/* src/styles/NavBar.css */
+
+.navbar-container {
+    background-color: #0284c7; /* Sky blue color */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar-item {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.navbar-item:hover {
+    background-color: #626769; /* Slightly darker blue */
+    border-radius: 4px;
+}
+
+.settings-container {
+    position: relative;
+}
+
+.settings-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color:  rgba(0, 0, 0, 0.1);
+    color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    border-radius: 4px;
+    z-index: 10;
+    min-width: 150px;
+}
+
+.settings-dropdown .navbar-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+
+.profile-overlay {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
