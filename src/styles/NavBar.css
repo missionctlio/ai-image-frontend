@@ -1,7 +1,7 @@
 /* src/styles/NavBar.css */
 
 .navbar-container {
-    background-color: #0284c7; /* Sky blue color */
+    background-color: #000000; /* Black color */
     color: white;
     display: flex;
     justify-content: space-between;
@@ -32,7 +32,7 @@
 }
 
 .navbar-item:hover {
-    background-color: #626769; /* Slightly darker blue */
+    background-color: #333333; /* Slightly lighter black */
     border-radius: 4px;
 }
 
@@ -44,8 +44,8 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background-color:  rgba(0, 0, 0, 0.1);
-    color: black;
+    background-color: #000000; /* Match navbar color */
+    color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 0.5rem;
     border-radius: 4px;
@@ -58,13 +58,53 @@
     width: 100%;
     text-align: left;
     margin-bottom: 0.5rem;
+    color: white;
 }
 
 .profile-overlay {
     margin-top: 0.5rem;
     padding: 1rem;
     border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.1);
-    color: black;
+    background-color: #1a1a1a; /* Slightly lighter black */
+    color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Burger Menu Styles */
+.burger-menu {
+    display: none;
+    cursor: pointer;
+}
+
+.burger-menu div {
+    width: 25px;
+    height: 3px;
+    background-color: white; /* Match navbar text color */
+    margin: 5px 0;
+    transition: 0.4s;
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+    .navbar-menu {
+        display: none; /* Hide regular menu */
+    }
+    
+    .burger-menu {
+        display: block; /* Show burger menu */
+    }
+
+    /* Show the menu when the burger is clicked */
+    .navbar-menu.open {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        position: absolute;
+        top: 100%;
+        right: 1rem;
+        background-color: #000000; /* Match navbar color */
+        padding: 1rem;
+        border-radius: 4px;
+        z-index: 10;
+    }
 }

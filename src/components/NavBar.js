@@ -5,19 +5,20 @@ import '../styles/NavBar.css';
 
 const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, logout, theme, setTheme }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isSettingsHovered, setIsSettingsHovered] = useState(false);
+    const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const toggleSettingsDropdown = () => {
+        setIsSettingsDropdownOpen(!isSettingsDropdownOpen);
     };
 
     return (
         <nav className={`navbar-container ${theme}-theme`}>
             <div className="navbar-brand">
                 <span>Welcome, {user.given_name}</span>
-                <button className="burger-menu" onClick={toggleMobileMenu}>
-                    ☰
-                </button>
             </div>
             <div className={`navbar-menu ${isMobileMenuOpen ? 'open' : ''}`}>
                 <button
@@ -32,20 +33,22 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                 >
                     Image Generator
                 </button>
-                <div 
-                    className="navbar-item settings-container"
-                    onMouseEnter={() => setIsSettingsHovered(true)}
-                    onMouseLeave={() => setIsSettingsHovered(false)}
+                <div
+                    className="settings-container"
+                    onMouseEnter={toggleSettingsDropdown}
+                    onMouseLeave={toggleSettingsDropdown}
                 >
-                    Settings
-                    {isSettingsHovered && (
+                    <button className="navbar-item">
+                        Settings
+                    </button>
+                    {isSettingsDropdownOpen && (
                         <div className="settings-dropdown">
-                            <button onClick={toggleProfile} className="navbar-item">
+                            <button className="navbar-item" onClick={toggleProfile}>
                                 Profile
                             </button>
                             {showProfile && (
-                                <div className={`profile-overlay ${theme}-theme`}>
-                                    <Profile user={user} theme={theme} />
+                                <div className="profile-overlay">
+                                    <Profile user={user} theme={theme} setTheme={setTheme} />
                                 </div>
                             )}
                         </div>
@@ -55,6 +58,13 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                 <button onClick={logout} className="navbar-item">
                     Logout
                 </button>
+            </div>
+
+            {/* Burger Menu Icon */}
+            <div className="burger-menu" onClick={toggleMobileMenu}>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
         </nav>
     );
