@@ -63,7 +63,7 @@
 
 .profile-overlay {
     margin-top: 0.5rem;
-    padding: 1rem;
+    padding: 0;
     border-radius: 4px;
     background-color: #1a1a1a; /* Slightly lighter black */
     color: white;
