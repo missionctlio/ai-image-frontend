@@ -370,7 +370,7 @@ input[type="text"] {
 
 .toggle-slider {
     position: relative;
-    width: 80px; /* Adjust width for text visibility */
+    width: 100px; /* Adjust width for text visibility */
     height: 20px;
     background-color: #eee; /* Slider background color */
     border-radius: 1.5em;
