@@ -11,8 +11,23 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+    };
+
     const toggleSettingsDropdown = () => {
         setIsSettingsDropdownOpen(!isSettingsDropdownOpen);
+    };
+
+    const handleComponentClick = (component) => {
+        handleComponentChange(component);
+        closeMobileMenu(); // Close the mobile menu when an item is clicked
+    };
+
+    const handleProfileClick = (event) => {
+        event.stopPropagation(); // Prevent closing the mobile menu
+        toggleProfile(); // Toggle profile visibility
+        setIsSettingsDropdownOpen(true); // Ensure settings dropdown closes
     };
 
     return (
@@ -22,13 +37,13 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
             </div>
             <div className={`navbar-menu ${isMobileMenuOpen ? 'open' : ''}`}>
                 <button
-                    onClick={() => handleComponentChange('chat')}
+                    onClick={() => handleComponentClick('chat')}
                     className={`navbar-item ${selectedComponent === 'chat' ? 'active' : ''}`}
                 >
                     Chat
                 </button>
                 <button
-                    onClick={() => handleComponentChange('imageGenerator')}
+                    onClick={() => handleComponentClick('imageGenerator')}
                     className={`navbar-item ${selectedComponent === 'imageGenerator' ? 'active' : ''}`}
                 >
                     Image Generator
@@ -43,7 +58,7 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                     </button>
                     {isSettingsDropdownOpen && (
                         <div className="settings-dropdown">
-                            <button className="navbar-item" onClick={toggleProfile}>
+                            <button className="navbar-item" onClick={handleProfileClick}>
                                 Profile
                             </button>
                             {showProfile && (
@@ -55,7 +70,10 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                     )}
                 </div>
                 <ThemeSelector theme={theme} setTheme={setTheme} />
-                <button onClick={logout} className="navbar-item">
+                <button onClick={() => {
+                    logout();
+                    closeMobileMenu(); // Close the mobile menu when logging out
+                }} className="navbar-item">
                     Logout
                 </button>
             </div>
