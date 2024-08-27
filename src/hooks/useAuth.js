@@ -5,6 +5,7 @@ import { verifyGoogleToken } from '../api.js';
 export const useAuth = () => {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')) || null);
     const [authToken, setAuthToken] = useState(localStorage.getItem('authToken') || null);
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken') || null);
 
     const isAllowedEmail = (email) => {
         const allowed = [
@@ -25,13 +26,15 @@ export const useAuth = () => {
                 throw new Error('ID token is missing');
             }
             
-            // Save the token in local storage and state
             const token = tokenResponse.credential;
-            localStorage.setItem('authToken', token);
-            setAuthToken(token);
-
             const backendResponse = await verifyGoogleToken(token);
-            const userInfo = backendResponse;
+
+            const { accessToken, refreshToken, userInfo: userInfo } = backendResponse;
+
+            localStorage.setItem('authToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            setAuthToken(accessToken);
+            setRefreshToken(refreshToken);
 
             if (isAllowedEmail(userInfo.email)) {
                 setUser(userInfo);
@@ -57,9 +60,11 @@ export const useAuth = () => {
         googleLogout();
         setUser(null);
         setAuthToken(null);
+        setRefreshToken(null);
         localStorage.removeItem('user');
         localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
     };
 
-    return { user, setUser, login, handleLoginError, handleLoginSuccess, isAllowedEmail, logout, authToken };
+    return { user, setUser, login, handleLoginError, handleLoginSuccess, isAllowedEmail, logout, authToken, refreshToken };
 };

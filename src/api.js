@@ -146,12 +146,53 @@ export const verifyGoogleToken = async (idToken) => {
         });
 
         if (response.status === 200 && response.data) {
-            return response.data; // This should return the verified user info from the backend
+            const { access_token, refresh_token, user_info } = response.data;
+
+            return {
+                accessToken: access_token,
+                refreshToken: refresh_token,
+                userInfo: user_info
+            };
         } else {
             throw new Error(`Token verification failed with status code ${response.status}`);
         }
     } catch (error) {
-        console.error('Token verification failed:', error.message);
-        throw new Error('Token verification failed');
+        // Check if the error indicates token expiration
+        if (error.response && error.response.status === 401 && error.response.data === 'Token has expired') {
+            const refreshToken = localStorage.getItem('refreshToken');
+
+            if (!refreshToken) {
+                throw new Error('No refresh token available');
+            }
+
+            try {
+                // Request a new access token using the refresh token
+                const refreshResponse = await axios.post(`${baseUrl}/auth/refresh`, {
+                    refresh_token: refreshToken,
+                });
+
+                if (refreshResponse.status === 200 && refreshResponse.data) {
+                    const { access_token, refresh_token, user_info } = refreshResponse.data;
+
+                    // Save the new tokens in local storage
+                    localStorage.setItem('authToken', access_token);
+                    localStorage.setItem('refreshToken', refresh_token);
+
+                    return {
+                        accessToken: access_token,
+                        refreshToken: refresh_token,
+                        userInfo: user_info
+                    };
+                } else {
+                    throw new Error(`Refresh token request failed with status code ${refreshResponse.status}`);
+                }
+            } catch (refreshError) {
+                console.error('Refresh token request failed:', refreshError.message);
+                throw new Error('Unable to refresh token');
+            }
+        } else {
+            console.error('Token verification failed:', error.message);
+            throw new Error('Token verification failed');
+        }
     }
 };

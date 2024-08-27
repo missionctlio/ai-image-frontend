@@ -45,6 +45,7 @@ const App = () => {
                         buttonText="Login with Google"
                         onSuccess={handleLoginSuccess}
                         onFailure={handleLoginError}
+                        access_type="offline"
                         cookiePolicy={"single_host_origin"}
                     />
                 </div>
