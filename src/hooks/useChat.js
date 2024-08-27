@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { createChatWebSocket } from '../api';
 import { v4 as uuidv4 } from 'uuid';
 import { THEME_LOCAL_STORAGE_KEY } from '../components/ThemeSelector';
+import { getAuthToken } from '../tokenManager';
 
 const LOCAL_STORAGE_KEY = 'chatMessages';
-const UUID_LOCAL_STORAGE_KEY = 'UserId';
 
 const useChat = () => {
     const [userQuery, setUserQuery] = useState('');
@@ -12,7 +12,6 @@ const useChat = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [theme, setTheme] = useState('dark');
-    const [uuid, setUuid] = useState(null);
     const [webSocketOpen, setWebSocketOpen] = useState(false);
 
     const textareaRef = useRef(null);
@@ -22,13 +21,6 @@ const useChat = () => {
     useEffect(() => {
         const savedMessages = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]');
         setMessages(savedMessages);
-
-        let savedUuid = localStorage.getItem(UUID_LOCAL_STORAGE_KEY);
-        if (!savedUuid) {
-            savedUuid = uuidv4();
-            localStorage.setItem(UUID_LOCAL_STORAGE_KEY, savedUuid);
-        }
-        setUuid(savedUuid);
     }, []);
 
     useEffect(() => {
@@ -72,9 +64,9 @@ const useChat = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         if (!userQuery.trim()) return;
-
+    
         const newMessages = [
             ...messages,
             { text: userQuery, type: 'user' },
@@ -85,16 +77,18 @@ const useChat = () => {
         setUserQuery('');
         setLoading(true);
         setWebSocketOpen(true);
-
-        websocketRef.current = createChatWebSocket(uuid);
-
+    
+        // Create a new WebSocket connection
+        websocketRef.current = createChatWebSocket();
+    
+        // Handle incoming messages
         websocketRef.current.onmessage = (event) => {
             const chunk = event.data;
-
+    
             setMessages((prevMessages) => {
                 const lastMessageIndex = prevMessages.length - 1;
                 const lastMessage = prevMessages[lastMessageIndex];
-
+    
                 if (chunk === '[END]') {
                     setLoading(false);
                     setWebSocketOpen(false);
@@ -104,17 +98,18 @@ const useChat = () => {
                             : message
                     );
                 }
-
+    
                 const updatedMessages = [...prevMessages];
                 updatedMessages[lastMessageIndex] = {
                     ...lastMessage,
                     text: (lastMessage.text || '') + chunk,
                 };
-
+    
                 return updatedMessages;
             });
         };
-
+    
+        // Handle WebSocket close event
         websocketRef.current.onclose = () => {
             setLoading(false);
             setWebSocketOpen(false);
@@ -127,19 +122,25 @@ const useChat = () => {
                 )
             );
         };
-
+    
+        // Handle WebSocket error
         websocketRef.current.onerror = (err) => {
             setError('Error fetching response');
             setLoading(false);
             setWebSocketOpen(false);
             websocketRef.current.close();
         };
-
+    
+        // Send token and user query after WebSocket connection is established
         websocketRef.current.onopen = () => {
+            const token = getAuthToken();
+            if (token) {
+                websocketRef.current.send(JSON.stringify({ type: 'AUTH', token }));
+            }
             websocketRef.current.send(userQuery);
         };
     };
-
+    
     const handleStop = () => {
         if (websocketRef.current) {
             websocketRef.current.close();

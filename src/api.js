@@ -103,11 +103,17 @@ export const deleteImages = async (imageIds) => {
     }
 };
 
-export const createChatWebSocket = (userId) => {
-    const wsUrl = `wss://dev.aesync.com/inference/language/ws/chat?userId=${userId}`;
-    return new WebSocket(wsUrl);
+const getWebSocketUrl = (path) => {
+    const token = getAuthToken();
+    const wsUrl = `${baseUrl.replace(/^https/, 'wss')}${path}?&token=${encodeURIComponent(token)}`;
+    return wsUrl;
 };
-
+// Function to create and return a WebSocket instance
+export const createChatWebSocket = () => {
+    const wsUrl = `${baseUrl.replace(/^https/, 'wss')}/inference/language/ws/chat`;
+    const ws = new WebSocket(wsUrl);
+    return ws;
+};
 export const fetchUser = async () => {
     try {
         const axiosInstance = getAxiosInstance();
