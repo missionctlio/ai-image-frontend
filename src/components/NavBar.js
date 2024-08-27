@@ -31,7 +31,7 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
     };
 
     return (
-        <nav className={`navbar-container ${theme}-theme`}>
+        <nav className={`navbar-container`}>
             <div className="navbar-brand">
                 <span>Welcome, {user.given_name}</span>
             </div>

@@ -10,14 +10,14 @@ const ThemeSelector = () => {
         if (theme === 'dark') {
             document.body.classList.remove('light-theme');
             document.body.classList.add('dark-theme');
-            document.querySelectorAll('.theme-selector').forEach(el => {
+            document.querySelectorAll('.theme-selector, .dark-theme, .light-theme').forEach(el => {
                 el.classList.remove('light-theme');
                 el.classList.add('dark-theme');
             });
         } else {
             document.body.classList.remove('dark-theme');
             document.body.classList.add('light-theme');
-            document.querySelectorAll('.theme-selector').forEach(el => {
+            document.querySelectorAll('.dark-theme, .light-theme').forEach(el => {
                 el.classList.remove('dark-theme');
                 el.classList.add('light-theme');
             });
@@ -32,7 +32,7 @@ const ThemeSelector = () => {
 
     return (
         <select
-            className="theme-selector"
+            className="navbar-item"
             value={theme}
             onChange={handleChange}
             id="themeSelector"

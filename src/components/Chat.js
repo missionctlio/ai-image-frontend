@@ -22,7 +22,7 @@ const Chat = () => {
         handleStop,
         handleClearMessages
     } = useChat();
-    const { theme } = useTheme();
+    const { theme, setTheme } = useTheme();
     return (
         <div className={`chat-container`}>
             <div className={`chat-messages ${theme}-theme`}>
