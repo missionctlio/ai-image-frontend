@@ -38,6 +38,8 @@ services:
       - /app/node_modules  # Prevents overwriting node_modules in the container
     environment:
       - CHOKIDAR_USEPOLLING=true  # Ensure file changes are detected inside Docker
+      - WDS_SOCKET_PORT=0
+      - WDS_SOCKET_PATH=/inference/language/ws/chat
     networks:
       - nginx-network
 

@@ -11,7 +11,6 @@ import useTheme from '../hooks/useTheme'; // Import useTheme hook
 const Chat = () => {
     const {
         userQuery,
-        setUserQuery,
         messages,
         loading,
         error,

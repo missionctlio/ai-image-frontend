@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from './hooks/useAuth';
 import useApp from './hooks/useApp';

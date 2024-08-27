@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { AiOutlineCopy } from 'react-icons/ai';
 import { Prism as SyntaxHighlighter } from 'https://esm.sh/react-syntax-highlighter@latest';
 import { materialDark } from 'https://esm.sh/react-syntax-highlighter@latest/dist/esm/styles/prism';

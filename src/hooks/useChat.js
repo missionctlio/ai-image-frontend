@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { createChatWebSocket } from '../api';
-import { v4 as uuidv4 } from 'uuid';
 import { THEME_LOCAL_STORAGE_KEY } from '../components/ThemeSelector';
 import { getAuthToken } from '../tokenManager';
 
@@ -12,7 +11,7 @@ const useChat = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [theme, setTheme] = useState('dark');
-    const [webSocketOpen, setWebSocketOpen] = useState(false);
+    const [setWebSocketOpen] = useState(false);
 
     const textareaRef = useRef(null);
     const messagesEndRef = useRef(null);

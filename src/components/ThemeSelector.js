@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { FaSun, FaMoon } from 'react-icons/fa'; // Import icons for light and dark themes
 import useTheme from '../hooks/useTheme'; // Import the useTheme hook
 export const THEME_LOCAL_STORAGE_KEY = 'theme'; // Key for storing theme in localStorage
 
