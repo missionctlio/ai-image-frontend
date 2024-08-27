@@ -141,7 +141,6 @@ export const loginWithGoogle = async () => {
 // New function to verify the Google ID token with the backend
 export const verifyGoogleToken = async (idToken) => {
     try {
-        console.log("token: ", idToken);
         const response = await axios.post(`${baseUrl}/auth/token`, {
             access_token: idToken,
         });
