@@ -4,7 +4,7 @@ const useFullImageViewer = (selectedImage, onClose) => {
     const [activeSection, setActiveSection] = useState('prompt');
 
     const downloadImage = () => {
-        fetch(selectedImage.imageUrl)
+        fetch(selectedImage.imageUrl.replace("original_", ""))
             .then(response => response.blob())
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);

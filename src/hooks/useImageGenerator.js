@@ -22,7 +22,7 @@ const useImageGenerator = (apiKey) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
+    
         try {
             // Get the prompt from the element or use the current state
             const promptElement = document.getElementById('prompt');
@@ -41,6 +41,11 @@ const useImageGenerator = (apiKey) => {
         
             // Poll for the task status
             const imageResult = await pollForResult(() => getTaskStatus(taskId), 100, 5000);
+    
+            // Check if imageUrl is empty and throw an error if it is
+            if (!imageResult.result.imageUrl) {
+                throw new Error('Image URL is empty');
+            }
         
             // Store and set the image
             const imageData = {
@@ -50,7 +55,7 @@ const useImageGenerator = (apiKey) => {
                 description: descriptionData,
                 aspectRatio: aspectRatio
             };
-
+            
             storeImage(imageData);
             setSelectedImage(imageData);
         } catch (error) {
@@ -60,6 +65,7 @@ const useImageGenerator = (apiKey) => {
             setLoading(false);
         }
     };
+    
 
     const pollForResult = async (apiCall, maxRetries = 3, pollInterval = 5000) => {
         let retryCount = 0;

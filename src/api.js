@@ -1,11 +1,27 @@
 import axios from 'axios';
+import { getAuthToken } from './tokenManager';
 
+// Base URL for API
 export const baseUrl = 'https://dev.aesync.com';
-export const generateDescription = async (userPrompt, apiKey) => {
+
+// Function to get an Axios instance with the authorization token
+const getAxiosInstance = () => {
+    const token = getAuthToken();
+    return axios.create({
+        baseURL: baseUrl,
+        headers: {
+            Authorization: token ? `Bearer ${token}` : ''
+        }
+    });
+};
+
+// API functions that use the authorization token
+
+export const generateDescription = async (userPrompt) => {
     try {
-        const response = await axios.post(`${baseUrl}/inference/language/generate-description`, 
-            { userPrompt: userPrompt.prompt }, 
-            { headers: { 'Authorization': `Bearer ${apiKey}` } }
+        const axiosInstance = getAxiosInstance();
+        const response = await axiosInstance.post('/inference/language/generate-description', 
+            { userPrompt: userPrompt.prompt }
         );
 
         if (response.status === 200 && response.data && response.data.description) {
@@ -19,11 +35,11 @@ export const generateDescription = async (userPrompt, apiKey) => {
     }
 };
 
-export const generateRefinedPrompt = async (userPrompt, apiKey) => {
+export const generateRefinedPrompt = async (userPrompt) => {
     try {
-        const response = await axios.post(`${baseUrl}/inference/language/generate-refined-prompt`, 
-            { userPrompt: userPrompt.prompt }, 
-            { headers: { 'Authorization': `Bearer ${apiKey}` } }
+        const axiosInstance = getAxiosInstance();
+        const response = await axiosInstance.post('/inference/language/generate-refined-prompt', 
+            { userPrompt: userPrompt.prompt }
         );
 
         if (response.status === 200 && response.data && response.data.refinedPrompt) {
@@ -37,11 +53,10 @@ export const generateRefinedPrompt = async (userPrompt, apiKey) => {
     }
 };
 
-export const generateImage = async (data, apiKey) => {
+export const generateImage = async (data) => {
     try {
-        const response = await axios.post(`${baseUrl}/inference/image/generate-image`, data, 
-            { headers: { 'Authorization': `Bearer ${apiKey}` } }
-        );
+        const axiosInstance = getAxiosInstance();
+        const response = await axiosInstance.post('/inference/image/generate-image', data);
 
         if (response.status === 200 && response.data) {
             return response.data;
@@ -56,7 +71,8 @@ export const generateImage = async (data, apiKey) => {
 
 export const getTaskStatus = async (taskId) => {
     try {
-        const response = await axios.get(`${baseUrl}/inference/image/task-status/${taskId}`);
+        const axiosInstance = getAxiosInstance();
+        const response = await axiosInstance.get(`/inference/image/task-status/${taskId}`);
 
         if (response.status === 200 && response.data) {
             return response.data;
@@ -71,7 +87,8 @@ export const getTaskStatus = async (taskId) => {
 
 export const deleteImages = async (imageIds) => {
     try {
-        const response = await axios.delete(`${baseUrl}/inference/image/delete-images/`, 
+        const axiosInstance = getAxiosInstance();
+        const response = await axiosInstance.delete('/inference/image/delete-images/', 
             { data: { image_ids: imageIds } }
         );
 
@@ -93,8 +110,9 @@ export const createChatWebSocket = (userId) => {
 
 export const fetchUser = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/auth/user`, { withCredentials: true });
-        
+        const axiosInstance = getAxiosInstance();
+        const response = await axiosInstance.get('/auth/user', { withCredentials: true });
+
         if (response.status === 200 && response.data) {
             return response.data;
         } else {
@@ -108,7 +126,8 @@ export const fetchUser = async () => {
 
 export const logout = async () => {
     try {
-        await axios.get(`${baseUrl}/auth/logout`, { withCredentials: true });
+        const axiosInstance = getAxiosInstance();
+        await axiosInstance.get('/auth/logout', { withCredentials: true });
     } catch (error) {
         console.error('Error logging out:', error.message);
     }
@@ -116,4 +135,23 @@ export const logout = async () => {
 
 export const loginWithGoogle = async () => {
     window.location.href = `${baseUrl}/auth/login`;
+};
+
+// New function to verify the Google ID token with the backend
+export const verifyGoogleToken = async (idToken) => {
+    try {
+        console.log("token: ", idToken);
+        const response = await axios.post(`${baseUrl}/auth/token`, {
+            access_token: idToken,
+        });
+
+        if (response.status === 200 && response.data) {
+            return response.data; // This should return the verified user info from the backend
+        } else {
+            throw new Error(`Token verification failed with status code ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Token verification failed:', error.message);
+        throw new Error('Token verification failed');
+    }
 };

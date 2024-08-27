@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../components/Auth';
+import { useAuth } from './useAuth';
 
 const useApp = () => {
-    const { user, login, logout } = useAuth();
+    const { login, logout } = useAuth();
+    const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')) || null);
     const [selectedComponent, setSelectedComponent] = useState('imageGenerator');
     const [showProfile, setShowProfile] = useState(false);
 
@@ -12,6 +13,10 @@ const useApp = () => {
             setSelectedComponent(savedComponent);
         }
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('user', JSON.stringify(user)); // Update local storage
+    }, [user]);
 
     const handleComponentChange = (component) => {
         setSelectedComponent(component);
@@ -25,6 +30,7 @@ const useApp = () => {
 
     return {
         user,
+        setUser,
         selectedComponent,
         setSelectedComponent,
         showProfile,
