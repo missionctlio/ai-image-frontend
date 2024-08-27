@@ -11,7 +11,7 @@ const useChat = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [theme, setTheme] = useState('dark');
-    const [setWebSocketOpen] = useState(false);
+    const [webSocketOpen, setWebSocketOpen] = useState(false);
 
     const textareaRef = useRef(null);
     const messagesEndRef = useRef(null);
