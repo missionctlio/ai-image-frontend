@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { getAuthToken } from './tokenManager';
 
 // Base URL for API
 export const baseUrl = 'https://dev.aesync.com';
 
 // Function to get an Axios instance with the authorization token
 const getAxiosInstance = () => {
-    const token = getAuthToken();
+    const token = localStorage.getItem('authToken');
     return axios.create({
         baseURL: baseUrl,
         headers: {

@@ -70,6 +70,7 @@ h1 {
     flex-direction: row;
     align-items: center;
     width: 100%;
+    margin-top: 20px;
     max-width: 1200px; /* Max width for larger screens */
     gap: 10px;
 }

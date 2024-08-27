@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createChatWebSocket } from '../api';
 import { THEME_LOCAL_STORAGE_KEY } from '../components/ThemeSelector';
-import { getAuthToken } from '../tokenManager';
 
 const LOCAL_STORAGE_KEY = 'chatMessages';
 
@@ -132,7 +131,7 @@ const useChat = () => {
     
         // Send token and user query after WebSocket connection is established
         websocketRef.current.onopen = () => {
-            const token = getAuthToken();
+            const token = localStorage.getItem('authToken');
             if (token) {
                 websocketRef.current.send(JSON.stringify({ type: 'AUTH', token }));
             }
