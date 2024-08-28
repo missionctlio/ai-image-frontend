@@ -59,6 +59,7 @@ const useImageGenerator = (apiKey) => {
             storeImage(imageData);
             setSelectedImage(imageData);
         } catch (error) {
+            console.log(descriptionData);
             console.error('Error during image generation:', error);
             alert('Error during the process. Please try again.');
         } finally {

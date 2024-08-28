@@ -4,8 +4,6 @@ import { verifyGoogleToken } from '../api.js';
 
 export const useAuth = () => {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')) || null);
-    const [authToken, setAuthToken] = useState(localStorage.getItem('authToken') || null);
-    const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken') || null);
 
     const isAllowedEmail = (email) => {
         const allowed = [
@@ -21,6 +19,7 @@ export const useAuth = () => {
     };
 
     const handleLoginSuccess = async (tokenResponse) => {
+        console.log(tokenResponse);
         try {
             if (!tokenResponse.credential) {
                 throw new Error('ID token is missing');
@@ -29,12 +28,7 @@ export const useAuth = () => {
             const token = tokenResponse.credential;
             const backendResponse = await verifyGoogleToken(token);
 
-            const { accessToken, refreshToken, userInfo: userInfo } = backendResponse;
-
-            localStorage.setItem('authToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
-            setAuthToken(accessToken);
-            setRefreshToken(refreshToken);
+            const { userInfo: userInfo } = backendResponse;
 
             if (isAllowedEmail(userInfo.email)) {
                 setUser(userInfo);
@@ -59,12 +53,8 @@ export const useAuth = () => {
     const logout = () => {
         googleLogout();
         setUser(null);
-        setAuthToken(null);
-        setRefreshToken(null);
         localStorage.removeItem('user');
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('refreshToken');
     };
 
-    return { user, setUser, login, handleLoginError, handleLoginSuccess, isAllowedEmail, logout, authToken, refreshToken };
+    return { user, setUser, login, handleLoginError, handleLoginSuccess, isAllowedEmail, logout };
 };

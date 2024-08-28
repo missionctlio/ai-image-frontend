@@ -3,14 +3,11 @@ import axios from 'axios';
 // Base URL for API
 export const baseUrl = 'https://dev.aesync.com';
 
-// Function to get an Axios instance with the authorization token
+// Function to get an Axios instance
 const getAxiosInstance = () => {
-    const token = localStorage.getItem('authToken');
     return axios.create({
         baseURL: baseUrl,
-        headers: {
-            Authorization: token ? `Bearer ${token}` : ''
-        }
+        withCredentials: true, // This ensures that cookies are sent with the request
     });
 };
 
@@ -102,17 +99,17 @@ export const deleteImages = async (imageIds) => {
     }
 };
 
-
 // Function to create and return a WebSocket instance
 export const createChatWebSocket = () => {
     const wsUrl = `${baseUrl.replace(/^https/, 'wss')}/inference/language/ws/chat`;
     const ws = new WebSocket(wsUrl);
     return ws;
 };
+
 export const fetchUser = async () => {
     try {
         const axiosInstance = getAxiosInstance();
-        const response = await axiosInstance.get('/auth/user', { withCredentials: true });
+        const response = await axiosInstance.get('/auth/user');
 
         if (response.status === 200 && response.data) {
             return response.data;
@@ -128,7 +125,7 @@ export const fetchUser = async () => {
 export const logout = async () => {
     try {
         const axiosInstance = getAxiosInstance();
-        await axiosInstance.get('/auth/logout', { withCredentials: true });
+        await axiosInstance.get('/auth/logout');
     } catch (error) {
         console.error('Error logging out:', error.message);
     }
@@ -138,61 +135,31 @@ export const loginWithGoogle = async () => {
     window.location.href = `${baseUrl}/auth/login`;
 };
 
-// New function to verify the Google ID token with the backend
+// Function to verify the Google ID token with the backend and get your app's tokens
+
 export const verifyGoogleToken = async (idToken) => {
     try {
-        const response = await axios.post(`${baseUrl}/auth/token`, {
-            access_token: idToken,
-        });
+        const response = await axios.post(
+            `${baseUrl}/auth/token`,
+            {}, // No need to send the token in the body
+            {
+                headers: {
+                    'Authorization': `Bearer ${idToken}`
+                },
+                withCredentials: true
+            }
+        );
 
         if (response.status === 200 && response.data) {
-            const { access_token, refresh_token, user_info } = response.data;
-
+            const { user_info } = response.data;
             return {
-                accessToken: access_token,
-                refreshToken: refresh_token,
                 userInfo: user_info
             };
         } else {
             throw new Error(`Token verification failed with status code ${response.status}`);
         }
     } catch (error) {
-        // Check if the error indicates token expiration
-        if (error.response && error.response.status === 401 && error.response.data === 'Token has expired') {
-            const refreshToken = localStorage.getItem('refreshToken');
-
-            if (!refreshToken) {
-                throw new Error('No refresh token available');
-            }
-
-            try {
-                // Request a new access token using the refresh token
-                const refreshResponse = await axios.post(`${baseUrl}/auth/refresh`, {
-                    refresh_token: refreshToken,
-                });
-
-                if (refreshResponse.status === 200 && refreshResponse.data) {
-                    const { access_token, refresh_token, user_info } = refreshResponse.data;
-
-                    // Save the new tokens in local storage
-                    localStorage.setItem('authToken', access_token);
-                    localStorage.setItem('refreshToken', refresh_token);
-
-                    return {
-                        accessToken: access_token,
-                        refreshToken: refresh_token,
-                        userInfo: user_info
-                    };
-                } else {
-                    throw new Error(`Refresh token request failed with status code ${refreshResponse.status}`);
-                }
-            } catch (refreshError) {
-                console.error('Refresh token request failed:', refreshError.message);
-                throw new Error('Unable to refresh token');
-            }
-        } else {
-            console.error('Token verification failed:', error.message);
-            throw new Error('Token verification failed');
-        }
+        console.error('Token verification failed:', error.message);
+        throw new Error('Token verification failed');
     }
 };

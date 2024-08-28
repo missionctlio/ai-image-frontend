@@ -40,15 +40,17 @@ const App = () => {
                 </>
             ) : (
                 <div className="login-container">
-                    <GoogleLogin
-                        clientId={CLIENT_ID}
-                        buttonText="Login with Google"
-                        onSuccess={handleLoginSuccess}
-                        onFailure={handleLoginError}
-                        access_type="offline"
-                        cookiePolicy={"single_host_origin"}
-                    />
-                </div>
+                <GoogleLogin
+                    clientId={CLIENT_ID}
+                    buttonText="Login with Google"
+                    onSuccess={handleLoginSuccess}
+                    onFailure={handleLoginError}
+                    accessType="offline" // This ensures you get a refresh token
+                    responseType="code"  // Use 'code' for authorization code flow
+                    scope="profile email https://www.googleapis.com/auth/userinfo.email" // Add scopes as needed
+                    cookiePolicy={'single_host_origin'}
+                />
+            </div>
             )}
         </div>
     );
