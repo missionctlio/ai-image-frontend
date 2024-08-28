@@ -25,8 +25,6 @@ const App = () => {
                 <>
                     <NavBar
                         user={user}
-                        theme={theme}
-                        setTheme={setTheme}
                         selectedComponent={selectedComponent}
                         handleComponentChange={handleComponentChange}
                         toggleProfile={toggleProfile}
