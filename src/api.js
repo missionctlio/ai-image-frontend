@@ -146,12 +146,10 @@ export const verifyGoogleToken = async (idToken) => {
         });
 
         if (response.status === 200 && response.data) {
-            const { access_token, refresh_token, user_info } = response.data;
+            const { userInfo } = response.data;
 
             return {
-                accessToken: access_token,
-                refreshToken: refresh_token,
-                userInfo: user_info
+                userInfo: userInfo
             };
         } else {
             throw new Error(`Token verification failed with status code ${response.status}`);
@@ -172,16 +170,14 @@ export const verifyGoogleToken = async (idToken) => {
                 });
 
                 if (refreshResponse.status === 200 && refreshResponse.data) {
-                    const { access_token, refresh_token, user_info } = refreshResponse.data;
+                    const { userInfo } = refreshResponse.data;
 
                     // Save the new tokens in local storage
                     localStorage.setItem('authToken', access_token);
                     localStorage.setItem('refreshToken', refresh_token);
 
                     return {
-                        accessToken: access_token,
-                        refreshToken: refresh_token,
-                        userInfo: user_info
+                        userInfo: userInfo
                     };
                 } else {
                     throw new Error(`Refresh token request failed with status code ${refreshResponse.status}`);
