@@ -1,7 +1,6 @@
-/* src/styles/NavBar.css */
-
+/* Navbar Container */
 .navbar-container {
-    background-color: #000000; /* Black color */
+    background-color: #000000; /* Black theme */
     color: white;
     display: flex;
     justify-content: space-between;
@@ -13,16 +12,22 @@
     z-index: 10;
 }
 
+/* Navbar Brand */
 .navbar-brand {
     font-size: 1.25rem;
     font-weight: bold;
+    margin-right: auto; /* Push the brand to the far left */
 }
 
+/* Navbar Menu */
 .navbar-menu {
     display: flex;
     gap: 1rem;
+    margin-left: auto; /* Align items to the right */
+    align-items: center;
 }
 
+/* Navbar Items */
 .navbar-item {
     background: none;
     border: none;
@@ -30,30 +35,67 @@
     cursor: pointer;
     font-size: 1rem;
     padding: 0.5rem 1rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
 }
 
 .navbar-item:hover {
-    background-color: #333333; /* Slightly lighter black */
+    background-color: #444444; /* Light grey color */
     border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add a small shadow on hover */
 }
 
-.settings-container {
+/* Profile Icon */
+.profile-icon-container {
     position: relative;
+    margin-left: 1rem; /* Add some space between the menu and the profile icon */
 }
 
+.profile-icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%; /* Make sure the button stays round */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.3s ease; /* Add transition for shadow */
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Make the profile icon round */
+    object-fit: cover;
+    display: inline-block;
+    background-color: transparent; /* Maintain transparency for image */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent; /* Add a transparent border to avoid unwanted background */
+}
+
+.profile-icon-button:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add a small shadow on hover */
+}
+
+.profile-icon-button:hover .profile-icon {
+    background-color: #444444; /* Light grey background on hover */
+    border-color: transparent; /* Ensure the border color doesn't change */
+}
+
+/* Dropdown styles */
 .settings-dropdown {
     position: absolute;
     top: 100%;
-    left: 0;
-    background-color: #000000; /* Match navbar color */
+    right: 0;
+    background-color: rgba(50, 50, 50, 0.8);
     color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 0.5rem;
-    border-radius: 4px;
+    border-radius: 8px;
     z-index: 10;
     min-width: 150px;
+    backdrop-filter: blur(5px);
 }
 
 .settings-dropdown .navbar-item {
@@ -61,16 +103,16 @@
     width: 100%;
     text-align: left;
     margin-bottom: 0.5rem;
-    color: white;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
-.profile-overlay {
-    margin-top: 0.5rem;
-    padding: 0;
-    border-radius: 4px;
-    background-color: #1a1a1a; /* Slightly lighter black */
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.settings-dropdown .navbar-item:hover {
+    background-color: #444444; /* Light grey background on hover */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add a small shadow on hover */
 }
 
 /* Burger Menu Styles */
@@ -82,7 +124,7 @@
 .burger-menu div {
     width: 25px;
     height: 3px;
-    background-color: white; /* Match navbar text color */
+    background-color: white;
     margin: 5px 0;
     transition: 0.4s;
 }
@@ -105,7 +147,7 @@
         position: absolute;
         top: 100%;
         right: 0px;
-        background-color: #000000; /* Match navbar color */
+        background-color: #000000;
         padding: 1rem 0 1.5rem;
         border-radius: 4px;
         z-index: 10;
