@@ -26,6 +26,10 @@
     word-wrap: break-word; /* Ensure long messages wrap */
 }
 
+.message p {
+    margin:10px 0;
+}
+
 .user-message {
     align-self: flex-end;
 }

@@ -131,7 +131,7 @@ const useChat = () => {
     
         // Send token and user query after WebSocket connection is established
         websocketRef.current.onopen = () => {
-            const token = localStorage.getItem('authToken');
+            const token = localStorage.getItem('accessToken');
             if (token) {
                 websocketRef.current.send(JSON.stringify({ type: 'AUTH', token }));
             }

@@ -146,8 +146,8 @@ export const verifyGoogleToken = async (idToken) => {
         });
 
         if (response.status === 200 && response.data) {
-            const { userInfo } = response.data;
-
+            const { userInfo, accessToken } = response.data;
+            localStorage.setItem('accessToken', accessToken);
             return {
                 userInfo: userInfo
             };
@@ -174,7 +174,6 @@ export const verifyGoogleToken = async (idToken) => {
 
                     // Save the new tokens in local storage
                     localStorage.setItem('authToken', access_token);
-                    localStorage.setItem('refreshToken', refresh_token);
 
                     return {
                         userInfo: userInfo
