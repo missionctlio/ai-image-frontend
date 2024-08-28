@@ -3,11 +3,12 @@ import { FaUser } from 'react-icons/fa'; // Import an icon as a fallback if ther
 import ThemeSelector from './ThemeSelector';
 import Profile from './Profile';
 import '../styles/NavBar.css'; // Import your NavBar-specific CSS
+import useTheme from '../hooks/useTheme';
 
-const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, logout, theme, setTheme }) => {
+const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, logout }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
-
+    const {theme, setTheme} = useTheme();
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
@@ -93,9 +94,32 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                 </div>
             </nav>
             {isMobileMenuOpen && (
-                <div className="mobile-theme-selector">
-                    <span>Theme</span>
-                    <ThemeSelector theme={theme} setTheme={setTheme} />
+                <div className="mobile-menu">
+                    <div className="settings-dropdown">
+                        <button className="navbar-item"onClick={handleProfileClick}>
+                            Profile
+                        </button>
+                        {showProfile && (
+                            <div className="profile-overlay">
+                                <Profile user={user} theme={theme} setTheme={setTheme} />
+                            </div>
+                        )}
+                    </div>
+                    <div className="mobile-theme-selector">
+                        <ThemeSelector theme={theme} setTheme={setTheme} />
+                    </div>
+                    <button
+                        onClick={() => handleComponentClick('chat')}
+                        className={`navbar-item ${selectedComponent === 'chat' ? 'active' : ''}`}
+                    >
+                        Chat
+                    </button>
+                    <button
+                        onClick={() => handleComponentClick('imageGenerator')}
+                        className={`navbar-item ${selectedComponent === 'imageGenerator' ? 'active' : ''}`}
+                    >
+                        Image Generator
+                    </button>
                 </div>
             )}
         </div>

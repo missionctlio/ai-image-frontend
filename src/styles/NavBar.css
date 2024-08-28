@@ -134,22 +134,25 @@
     .navbar-menu {
         display: none; /* Hide regular menu */
     }
-    
+
     .burger-menu {
         display: block; /* Show burger menu */
     }
 
-    /* Show the menu when the burger is clicked */
-    .navbar-menu.open {
+    /* Mobile Menu */
+    .mobile-menu {
         display: flex;
         flex-direction: column;
         gap: 1rem;
         position: absolute;
-        top: 100%;
-        right: 0px;
+        right: 0;
         background-color: #000000;
-        padding: 1rem 0 1.5rem;
+        padding: 1rem;
         border-radius: 4px;
         z-index: 10;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add shadow for visibility */
+    }
+    .navbar-item {
+        font-size:0.7em;
     }
 }

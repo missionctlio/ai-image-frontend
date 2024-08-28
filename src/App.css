@@ -586,7 +586,7 @@ input[type="text"] {
     margin: 20px;
 }
 
-.theme-selector, button, .download-button {
+.theme-selector, .theme-selector.button, .download-button {
     padding: 10px;
     border: none; /* Removed border */
     border-radius: 5px;
@@ -596,7 +596,7 @@ input[type="text"] {
     transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
 }
 
-.theme-selector:hover, button:hover, .download-button:hover {
+.theme-selector:hover, .theme-selector.button:hover, .download-button:hover {
     background: linear-gradient(145deg, #e6f0ff, #ffffff); /* Slightly darker gradient on hover */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
 }
