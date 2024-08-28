@@ -1,106 +1,31 @@
-/* src/styles/NavBar.css */
-
-.navbar-container {
-    background-color: #0284c7;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.profile-container {
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4); /* Doubled shadow intensity */
+    backdrop-filter: blur(10px); /* Adds a blur effect */
+    background-color: rgba(200, 200, 200, 0.8); /* Light gray see-through background */
+    color: var(--text-color); /* Text color based on the theme */
 }
 
-.navbar-brand {
-    font-size: 1.25rem;
-    font-weight: bold;
+.profile-container.light-theme {
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly lighter gray for light theme */
+    color: #333; /* Dark text color */
 }
 
-.burger-menu {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    display: none;
-    cursor: pointer;
+.profile-container.dark-theme {
+    background-color: rgba(50, 50, 50, 0.9); /* Slightly darker gray for dark theme */
+    color: #f1f1f1; /* Light text color */
 }
 
-.navbar-menu {
-    display: flex;
-    gap: 1rem;
-}
-
-.navbar-item {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    transition: background-color 0.3s ease;
-}
-
-.navbar-item:hover {
-    background-color: #0369a1;
-    border-radius: 4px;
-}
-
-.settings-overlay {
-    position: absolute;
-    top: 60px;
-    right: 1rem;
-    background-color: white;
-    color: black;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    border-radius: 4px;
-    z-index: 1000;
-    min-width: 150px;
-}
-
-.settings-overlay .navbar-item {
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 1rem;
     display: block;
-    width: 100%;
-    text-align: left;
-    margin-bottom: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #333; /* Default background if no image */
 }
 
-.profile-overlay {
-    background-color: #f0f0f0;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-top: 0.5rem;
-    position: relative;
-    top: 0; /* Align right below the settings */
-    left: 0;
-    width: 100%;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .navbar-menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background-color: #0284c7;
-        width: 100%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    .navbar-menu.open {
-        display: flex;
-    }
-
-    .burger-menu {
-        display: block;
-    }
-
-    .navbar-item {
-        width: 100%;
-        text-align: left;
-        padding: 1rem;
-    }
-}
