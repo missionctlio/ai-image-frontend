@@ -62,19 +62,14 @@ body {
     margin-left: 10px;
 }
 
-
-h1 {
-    margin-bottom: 20px;
-}
-
 /* Form container styles */
 .form-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
-    margin-top: 20px;
-    max-width: 1200px; /* Max width for larger screens */
+    margin-top: 5vh;
+    max-width: 50%; /* Max width for larger screens */
     gap: 10px;
 }
 

@@ -25,7 +25,6 @@ const ImageGenerator = () => {
 
     return (
         <div className="container">
-            <h1>Generate Images</h1>
             <form id="promptForm" className="form-container" onSubmit={handleSubmit}>
                 <input
                     type="text"
