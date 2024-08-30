@@ -42,11 +42,7 @@
     position: relative;
 }
 
-.navbar-item:hover {
-    background-color: #444444; /* Light grey color */
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add a small shadow on hover */
-}
+
 
 /* Profile Icon */
 .profile-icon-container {

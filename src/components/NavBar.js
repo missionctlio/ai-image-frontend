@@ -85,13 +85,6 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                         </div>
                     )}
                 </div>
-
-                {/* Burger Menu Icon */}
-                <div className="burger-menu" onClick={toggleMobileMenu}>
-                    <div className={isMobileMenuOpen ? 'line line1 open' : 'line line1'}></div>
-                    <div className={isMobileMenuOpen ? 'line line2 open' : 'line line2'}></div>
-                    <div className={isMobileMenuOpen ? 'line line3 open' : 'line line3'}></div>
-                </div>
             </nav>
             {isMobileMenuOpen && (
                 <div className="mobile-menu">

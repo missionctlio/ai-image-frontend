@@ -592,7 +592,7 @@ input[type="text"] {
     margin: 20px;
 }
 
-.theme-selector, .theme-selector.button, .toggle-button, .download-button, .copy-button {
+.theme-selector, .theme-selector.button, .download-button, .toggle-button, .copy-button, .close-button {
     padding: 10px;
     border: none; /* Removed border */
     border-radius: 5px;
@@ -602,12 +602,12 @@ input[type="text"] {
     transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
 }
 
-.theme-selector:hover, .theme-selector.button:hover, .download-button:hover {
+.theme-selector:hover, .download-button:hover {
     background: linear-gradient(145deg, #e6f0ff, #ffffff); /* Slightly darker gradient on hover */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
 }
 
-.dark-theme .theme-selector:hover, .dark-theme button:hover, .darktheme .download-button:hover {
+.dark-theme .theme-selector:hover, .download-button:hover {
     background: linear-gradient(145deg, #333, #444); /* Slightly darker gradient on hover */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
 }
