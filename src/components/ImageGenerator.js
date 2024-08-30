@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Thumbnails from './Thumbnails'; // Import the Thumbnails component
 import FullImageViewer from './FullImageViewer'; // Import the FullImageViewer component
 import { FaPaperPlane } from 'react-icons/fa'; // Import the icon (Font Awesome example)
@@ -21,7 +21,7 @@ const ImageGenerator = () => {
         handleCloseFullImageViewer
     } = useImageGenerator(apiKey);
 
-    const { theme } = useTheme();
+    const [theme, setTheme] = useState('dark');
 
     return (
         <div className="container">

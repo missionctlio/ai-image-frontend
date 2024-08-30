@@ -44,6 +44,12 @@ body {
     max-width: 100vw; /* Ensure container does not exceed viewport width */
 }
 
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 100% of the viewport height */
+}
+
 .relative-container {
     position: relative;
 }

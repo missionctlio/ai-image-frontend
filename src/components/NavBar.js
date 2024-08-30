@@ -8,7 +8,7 @@ import useTheme from '../hooks/useTheme';
 const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, logout }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
-    const {theme, setTheme} = useTheme();
+    const { theme, setTheme } = useTheme();
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
