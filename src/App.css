@@ -592,7 +592,7 @@ input[type="text"] {
     margin: 20px;
 }
 
-.theme-selector, .theme-selector.button, .download-button {
+.theme-selector, .theme-selector.button, .toggle-button, .download-button, .copy-button {
     padding: 10px;
     border: none; /* Removed border */
     border-radius: 5px;
