@@ -36,7 +36,6 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-
 // API functions that use the authorization token
 
 export const generateDescription = async (userPrompt) => {
@@ -121,12 +120,11 @@ export const deleteImages = async (imageIds) => {
 };
 
 // WebSocket connection with cookie-based authentication
-export const createChatWebSocket = () => {
-    const wsUrl = `${baseUrl.replace(/^https/, 'wss')}/inference/language/ws/chat`;
-    const ws = new WebSocket(wsUrl); // Cookies are automatically included in the WebSocket connection
+export const createChatWebSocket = (accessToken) => {
+    const wsUrl = `${baseUrl.replace(/^https/, 'wss')}/inference/language/ws/chat?access_token=${encodeURIComponent(accessToken)}`;
+    const ws = new WebSocket(wsUrl);
     return ws;
 };
-
 // User management functions
 
 export const fetchUser = async () => {
@@ -164,8 +162,14 @@ export const verifyGoogleToken = async (idToken) => {
         }, { withCredentials: true });
 
         if (response.status === 200 && response.data) {
+            const { userInfo, accessToken } = response.data;
+            console.log('User info:', userInfo);
+            console.log('Access token:', accessToken);
+            // Store the access token in localStorage
+            localStorage.setItem('accessToken', accessToken);
+            
             return {
-                userInfo: response.data.userInfo
+                userInfo, accessToken
             };
         } else {
             throw new Error(`Token verification failed with status code ${response.status}`);

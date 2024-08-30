@@ -26,8 +26,11 @@
     word-wrap: break-word; /* Ensure long messages wrap */
 }
 
+.message li {
+    margin-bottom: 10px;
+}
 .message p {
-    margin:10px 0;
+    margin:20px 0;
 }
 
 .user-message {

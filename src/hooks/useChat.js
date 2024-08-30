@@ -76,8 +76,11 @@ const useChat = () => {
         setLoading(true);
         setWebSocketOpen(true);
     
-        // Create a new WebSocket connection
-        websocketRef.current = createChatWebSocket();
+        // Get the access token from localStorage
+        const accessToken = localStorage.getItem('accessToken');
+    
+        // Create a new WebSocket connection with the access token
+        websocketRef.current = createChatWebSocket(accessToken);
     
         // Handle incoming messages
         websocketRef.current.onmessage = (event) => {
@@ -129,12 +132,8 @@ const useChat = () => {
             websocketRef.current.close();
         };
     
-        // Send token and user query after WebSocket connection is established
+        // Send user query after WebSocket connection is established
         websocketRef.current.onopen = () => {
-            const token = localStorage.getItem('accessToken');
-            if (token) {
-                websocketRef.current.send(JSON.stringify({ type: 'AUTH', token }));
-            }
             websocketRef.current.send(userQuery);
         };
     };
