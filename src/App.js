@@ -20,7 +20,7 @@ const App = () => {
     }, [user]);
 
     return (
-        <div className={`app-container`}>
+        <div className={`app-container ${theme}-theme`}>
             {user ? (
                 <>
                     <NavBar
