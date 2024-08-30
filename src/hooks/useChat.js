@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { createChatWebSocket } from '../api';
+import { createChatWebSocket, deleteChatHistory } from '../api';
 import { THEME_LOCAL_STORAGE_KEY } from '../components/ThemeSelector';
 
 const LOCAL_STORAGE_KEY = 'chatMessages';
@@ -153,9 +153,15 @@ const useChat = () => {
         }
     };
 
-    const handleClearMessages = () => {
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
-        setMessages([]);
+    const handleClearMessages = async () => {
+        try {
+            await deleteChatHistory();
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+            setMessages([]);
+        } catch (error) {
+            console.error('Error deleting chat history:', error);
+            alert('Error deleting chat history');
+        }
     };
 
     return {

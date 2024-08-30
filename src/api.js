@@ -179,3 +179,19 @@ export const verifyGoogleToken = async (idToken) => {
         throw new Error('Token verification failed');
     }
 };
+
+
+export const deleteChatHistory = async () => {
+    try {
+        const response = await axiosInstance.delete('/inference/language/delete-chat-history');
+
+        if (response.status === 200 && response.data) {
+            return response.data;
+        } else {
+            throw new Error(`Request failed with status code ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error deleting chat history:', error.message);
+        throw new Error('Failed to delete chat history');
+    }
+};

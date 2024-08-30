@@ -14,7 +14,8 @@ export const useAuth = () => {
             'emptysetmedia.com',
             'bryanlokey.com',
             "megan.jaramillo.dev@gmail.com",
-            'gravenste.in'
+            'gravenste.in',
+            'brandon.m.murray@gmail.com'
         ];
         const emailDomain = email.includes('@') ? email.split('@')[1] : email;
         return allowed.some(allowedItem => allowedItem.includes('@') ? allowedItem === email : allowedItem === emailDomain);
