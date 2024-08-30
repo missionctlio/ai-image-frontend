@@ -13,6 +13,7 @@ export const useAuth = () => {
             'emptyset.io',
             'emptysetmedia.com',
             'bryanlokey.com',
+            "megan.jaramillo.dev@gmail.com",
             'gravenste.in'
         ];
         const emailDomain = email.includes('@') ? email.split('@')[1] : email;
@@ -61,8 +62,6 @@ export const useAuth = () => {
             setAccessToken(null);
             localStorage.removeItem('user'); // Remove user info from local storage
             localStorage.removeItem('accessToken'); // Remove access token from local storage
-            // Make sure to log out from the backend as well
-            await apiLogout(); 
         } catch (error) {
             console.error('Error logging out:', error.message);
         }

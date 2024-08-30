@@ -10,6 +10,7 @@
 /* Chat messages container */
 .chat-messages {
     flex: 1;
+    margin-top:5vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse; /* Newest messages at the bottom */
