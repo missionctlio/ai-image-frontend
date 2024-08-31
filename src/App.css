@@ -131,10 +131,7 @@ input[type="text"] {
     button {
         width: 100%; /* Further adjust width for very small screens */
         height: 100%; /* Further adjust height for very small screens */
-        font-size: 0.5em; /* Smaller font size */
-    }
-    .download-button, .toggle-button {
-        size: 0.2em;
+        font-size: 0.8em; /* Smaller font size */
     }
 }
 /* Loading dots styles */
@@ -695,13 +692,4 @@ input.dark-theme:focus {
     left:0px;
     top:0px;
     margin: 5px 0px 0px 5px;
-}
-
-.send-button:hover {
-    background: var(--accent-blue-dark);
-}
-
-.send-button:disabled {
-    background: var(--accent-blue-light);
-    cursor: not-allowed;
 }

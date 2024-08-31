@@ -69,6 +69,7 @@ textarea {
     cursor: pointer;
     display: flex;
     align-items: center;
+    padding: 0;
     justify-content: center;
     width: 40px; /* Set width for circular shape */
     height: 40px; /* Set height for circular shape */
