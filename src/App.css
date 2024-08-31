@@ -1,11 +1,4 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; 
 
-this is messing up the markdown formatting.
-*/
-
-/* Color variables */
 :root {
     --primary-blue: #007BFF;
     --accent-blue-light: #82b2f1;
@@ -571,6 +564,9 @@ input[type="text"] {
     .full-image-container img {
         max-width: 30vh;
         max-height: 30vh;
+    }
+    .full-image-container {
+        margin-top: 40vh;
     }
     
     .delete-icon {
