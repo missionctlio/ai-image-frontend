@@ -89,7 +89,7 @@
 /* Dropdown Styles */
 .settings-dropdown {
     position: absolute;
-    top: 1vh;
+    top: 0;
     right: 0;
     background-color: #2a2a2a;  /* Slightly lighter dark background for dropdown */
     color: white;
@@ -160,7 +160,7 @@
 }
 
 /* Mobile Responsiveness */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 360px) {
     .navbar-container {
         flex-direction: column;
         align-items: flex-end;  /* Align items to the right in mobile view */
@@ -182,6 +182,7 @@
 
     .settings-dropdown {
         min-width: 240px;  /* Ensure the dropdown width is consistent */
+        top: 0;
     }
 
     .profile-icon-button {
