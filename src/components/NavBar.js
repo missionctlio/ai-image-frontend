@@ -1,36 +1,55 @@
-import React, { useState } from 'react';
-import { FaUser } from 'react-icons/fa'; // Import an icon as a fallback if there's no user picture
+import React, { useState, useEffect } from 'react';
+import { FaUser } from 'react-icons/fa';
 import ThemeSelector from './ThemeSelector';
 import Profile from './Profile';
-import '../styles/NavBar.css'; // Import your NavBar-specific CSS
+import '../styles/NavBar.css';
 import useTheme from '../hooks/useTheme';
 
 const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, logout }) => {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
     const { theme, setTheme } = useTheme();
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
 
-    const closeMobileMenu = () => {
-        setIsMobileMenuOpen(false);
-    };
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 768);
+        };
 
-    const toggleSettingsDropdown = () => {
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const handleProfileClick = () => {
         setIsSettingsDropdownOpen(!isSettingsDropdownOpen);
+        setIsProfileOpen(false); // Close profile details when toggling the dropdown
+    };
+
+    const toggleProfileDetails = () => {
+        setIsProfileOpen(!isProfileOpen);
     };
 
     const handleComponentClick = (component) => {
         handleComponentChange(component);
-        closeMobileMenu(); // Close the mobile menu when an item is clicked
+        setIsSettingsDropdownOpen(false); // Close dropdown when a component is selected
+        setIsProfileOpen(false); // Close profile details when a component is selected
     };
 
-    const handleProfileClick = (event) => {
-        event.stopPropagation(); // Prevent closing the mobile menu
-        toggleProfile(); // Toggle profile visibility
-        setIsSettingsDropdownOpen(true); // Ensure settings dropdown closes
-    };
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (!event.target.closest('.profile-icon-container')) {
+                setIsSettingsDropdownOpen(false); // Close the dropdown if clicked outside
+                setIsProfileOpen(false); // Close profile details if clicked outside
+            }
+        };
+
+        document.addEventListener('click', handleOutsideClick);
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, []);
 
     return (
         <div className="navbar-wrapper">
@@ -38,27 +57,26 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                 <div className="navbar-brand">
                     <span>Welcome, {user.given_name}</span>
                 </div>
-                <div className={`navbar-menu ${isMobileMenuOpen ? 'open' : ''}`}>
-                    <button
-                        onClick={() => handleComponentClick('chat')}
-                        className={`navbar-item ${selectedComponent === 'chat' ? 'active' : ''}`}
-                    >
-                        Chat
-                    </button>
-                    <button
-                        onClick={() => handleComponentClick('imageGenerator')}
-                        className={`navbar-item ${selectedComponent === 'imageGenerator' ? 'active' : ''}`}
-                    >
-                        Image Generator
-                    </button>
-                </div>
 
-                <div
-                    className="profile-icon-container"
-                    onMouseEnter={toggleSettingsDropdown}
-                    onMouseLeave={toggleSettingsDropdown}
-                >
-                    <button className="navbar-item profile-icon-button">
+                {!isMobileView && (
+                    <div className="navbar-menu">
+                        <button
+                            onClick={() => handleComponentClick('chat')}
+                            className={`navbar-item ${selectedComponent === 'chat' ? 'active' : ''}`}
+                        >
+                            Chat
+                        </button>
+                        <button
+                            onClick={() => handleComponentClick('imageGenerator')}
+                            className={`navbar-item ${selectedComponent === 'imageGenerator' ? 'active' : ''}`}
+                        >
+                            Image Generator
+                        </button>
+                    </div>
+                )}
+
+                <div className="profile-icon-container">
+                    <button className="profile-icon-button" onClick={handleProfileClick}>
                         {user.picture ? (
                             <img src={user.picture} alt="User Profile" className="profile-icon" />
                         ) : (
@@ -67,10 +85,26 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                     </button>
                     {isSettingsDropdownOpen && (
                         <div className="settings-dropdown">
-                            <button className="navbar-item" onClick={handleProfileClick}>
+                            {isMobileView && (
+                                <>
+                                    <button
+                                        onClick={() => handleComponentClick('chat')}
+                                        className={`navbar-item ${selectedComponent === 'chat' ? 'active' : ''}`}
+                                    >
+                                        Chat
+                                    </button>
+                                    <button
+                                        onClick={() => handleComponentClick('imageGenerator')}
+                                        className={`navbar-item ${selectedComponent === 'imageGenerator' ? 'active' : ''}`}
+                                    >
+                                        Image Generator
+                                    </button>
+                                </>
+                            )}
+                            <button className="navbar-item" onClick={toggleProfileDetails}>
                                 Profile
                             </button>
-                            {showProfile && (
+                            {isProfileOpen && (
                                 <div className="profile-overlay">
                                     <Profile user={user} theme={theme} setTheme={setTheme} />
                                 </div>
@@ -86,35 +120,6 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                     )}
                 </div>
             </nav>
-            {isMobileMenuOpen && (
-                <div className="mobile-menu">
-                    <div className="settings-dropdown">
-                        <button className="navbar-item"onClick={handleProfileClick}>
-                            Profile
-                        </button>
-                        {showProfile && (
-                            <div className="profile-overlay">
-                                <Profile user={user} theme={theme} setTheme={setTheme} />
-                            </div>
-                        )}
-                    </div>
-                    <div className="mobile-theme-selector">
-                        <ThemeSelector theme={theme} setTheme={setTheme} />
-                    </div>
-                    <button
-                        onClick={() => handleComponentClick('chat')}
-                        className={`navbar-item ${selectedComponent === 'chat' ? 'active' : ''}`}
-                    >
-                        Chat
-                    </button>
-                    <button
-                        onClick={() => handleComponentClick('imageGenerator')}
-                        className={`navbar-item ${selectedComponent === 'imageGenerator' ? 'active' : ''}`}
-                    >
-                        Image Generator
-                    </button>
-                </div>
-            )}
         </div>
     );
 };

@@ -427,6 +427,7 @@ input[type="text"] {
 }
 
 .text-container {
+    padding-top:1vh;
     display: flex; /* Use flexbox for horizontal alignment */
     align-items: flex-start; /* Align items to the top */
     width: 100%; /* Ensure it takes full width of its parent */
@@ -592,7 +593,7 @@ input[type="text"] {
     margin: 20px;
 }
 
-.theme-selector, .theme-selector.button, .download-button, .toggle-button, .copy-button, .close-button {
+.theme-selector, .theme-selector.button, .download-button, .toggle-button, .copy-button{
     padding: 10px;
     border: none; /* Removed border */
     border-radius: 5px;
@@ -604,11 +605,6 @@ input[type="text"] {
 
 .theme-selector:hover, .download-button:hover {
     background: linear-gradient(145deg, #e6f0ff, #ffffff); /* Slightly darker gradient on hover */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
-}
-
-.dark-theme .theme-selector:hover, .download-button:hover {
-    background: linear-gradient(145deg, #333, #444); /* Slightly darker gradient on hover */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
 }
 
@@ -685,7 +681,7 @@ input.dark-theme:focus {
 }
 .copy-button {
     position:relative;
-    max-width: 5vh;
+    width: auto;
     top:-25px;
     left:-25px;
 }
