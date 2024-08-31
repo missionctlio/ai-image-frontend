@@ -123,7 +123,7 @@ input[type="text"] {
     button {
         width: 8vh; /* Adjust width for smaller screens */
         height: 2.5vh; /* Adjust height for smaller screens */
-        font-size: 0.9em; /* Slightly smaller font size */
+        font-size: 0.7em; /* Slightly smaller font size */
     }
 }
 
@@ -131,7 +131,10 @@ input[type="text"] {
     button {
         width: 100%; /* Further adjust width for very small screens */
         height: 100%; /* Further adjust height for very small screens */
-        font-size: 0.8em; /* Smaller font size */
+        font-size: 0.5em; /* Smaller font size */
+    }
+    .download-button, .toggle-button {
+        size: 0.2em;
     }
 }
 /* Loading dots styles */
@@ -566,7 +569,7 @@ input[type="text"] {
         max-height: 30vh;
     }
     .full-image-container {
-        margin-top: 40vh;
+        margin-top: 25vh;
     }
     
     .delete-icon {
@@ -594,7 +597,6 @@ input[type="text"] {
     border: none; /* Removed border */
     border-radius: 5px;
     background: linear-gradient(145deg, #ffffff, #e6f0ff); /* Light gradient background */
-    font-size: 1em;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Enhanced depth and shadow */
     transition: background 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
 }
