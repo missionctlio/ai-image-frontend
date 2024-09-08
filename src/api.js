@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { handleLogout } from './hooks/useAuth';
 // Base URL for API
 export const baseUrl = 'https://dev.aesync.com';
 
@@ -15,22 +15,66 @@ axiosInstance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
+        // Log the error response for better visibility
+        console.log('Error response received:', {
+            url: originalRequest.url,
+            method: originalRequest.method,
+            status: error.response?.status,
+            data: error.response?.data,
+        });
+
+        // Prevent retrying the /auth/refresh request itself
+        if (originalRequest.url.includes('/auth/refresh')) {
+            if (error.response?.data?.detail === 'Refresh token missing') {
+                console.log('Refresh token missing. Logging out...');
+                localStorage.delete("user");
+                console.log("user", localStorage.getItem("user"))
+                handleLogout(); // Call the logout function to clear the session
+            }
+            return Promise.reject(error);
+        }
+
         // If the request failed due to an expired token, try refreshing the token
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
+
+            console.log('Token expired or unauthorized. Attempting token refresh...', {
+                originalRequestUrl: originalRequest.url
+            });
 
             try {
                 // Attempt to refresh the token
                 await axiosInstance.post('/auth/refresh', null, { withCredentials: true });
                 
                 // Retry the original request
+                console.log('Retrying original request after successful token refresh:', originalRequest.url);
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
-                console.error('Token refresh failed:', refreshError.message);
-                // Optional: redirect to login or handle unauthorized state
+                console.error('Token refresh failed:', {
+                    message: refreshError.message,
+                    status: refreshError.response?.status,
+                    data: refreshError.response?.data,
+                });
+
+                // Check if the refresh token is missing and log the user out
+                if (refreshError.response?.data?.detail === 'Refresh token missing') {
+                    console.log('Refresh token missing. Logging out...');
+                    localStorage.removeItem("user");
+                    console.log("user", localStorage.getItem("user"))
+                    handleLogout(); // Call the logout function to clear the session
+                }
+
+                // Optional: reject the original request and stop further processing
                 return Promise.reject(refreshError);
             }
         }
+
+        // Log that the request failed with an error and the response is not retried
+        console.log('Request failed without retry:', {
+            url: originalRequest.url,
+            method: originalRequest.method,
+            error: error.message
+        });
 
         return Promise.reject(error);
     }
