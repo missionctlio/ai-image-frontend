@@ -40,6 +40,7 @@ services:
       - CHOKIDAR_USEPOLLING=true  # Ensure file changes are detected inside Docker
       - WDS_SOCKET_PORT=0
       - WDS_SOCKET_PATH=/inference/language/ws/chat
+      - REACT_APP_GOOGLE_CLIENT_ID=637624716722-u57lashgg75tiu9oa22e94aegp8mbjqm.apps.googleusercontent.com
     networks:
       - nginx-network
 
