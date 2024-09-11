@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { generateImage, getTaskStatus, generateRefinedPrompt, generateDescription } from '../api';
+import { generateImage, getTaskStatus, generateRefinedPrompt, generateDescription, getJobCounts } from '../api';
 
 const useImageGenerator = (apiKey) => {
     const [prompt, setPrompt] = useState('');
@@ -8,6 +8,8 @@ const useImageGenerator = (apiKey) => {
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [queuedJobs, setQueuedJobs] = useState(0); // To track queued jobs
+    const [runningJobs, setRunningJobs] = useState(0); // To track running jobs
 
     useEffect(() => {
         const storedImages = JSON.parse(localStorage.getItem('images')) || [];
@@ -15,49 +17,61 @@ const useImageGenerator = (apiKey) => {
     }, []);
 
     useEffect(() => {
-        const storedImages = JSON.parse(localStorage.getItem('images')) || [];
-        setImages(storedImages.reverse());
-    }, [selectedImage]);
+        const fetchJobCounts = async () => {
+            try {
+                const { queued_jobs, running_jobs } = await getJobCounts();
+                setQueuedJobs(queued_jobs);
+                setRunningJobs(running_jobs);
+            } catch (error) {
+                console.error('Failed to fetch job counts:', error);
+            }
+        };
+
+        fetchJobCounts(); // Fetch immediately on mount
+
+        const intervalId = setInterval(fetchJobCounts, 5000); // Fetch every 5 seconds
+
+        return () => clearInterval(intervalId); // Clear interval on unmount
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-    
+
         try {
-            // Get the prompt from the element or use the current state
-            const promptElement = document.getElementById('prompt');
-            const basePrompt = promptElement ? promptElement.value : prompt;
-        
-            // Fetch description data
+            const basePrompt = prompt;
+
+            // Fetch description
             const descriptionData = await pollForResult(() => generateDescription({ prompt: basePrompt }), 3, 5000);
-        
-            // Refine the prompt if needed
+
+            // Refine prompt if needed
             const finalPrompt = usePromptRefiner
                 ? await pollForResult(() => generateRefinedPrompt({ prompt: basePrompt }), 3, 5000) || basePrompt
                 : basePrompt;
-        
-            // Generate the image
+
+            // Generate image
             const { taskId } = await generateImage({ userPrompt: finalPrompt, aspectRatio }, apiKey);
-        
-            // Poll for the task status
+            setQueuedJobs(prev => prev + 1); // Increment queued job count
+
+            // Poll for task status
             const imageResult = await pollForResult(() => getTaskStatus(taskId), 100, 5000);
-    
-            // Check if imageUrl is empty and throw an error if it is
+
             if (!imageResult.result.imageUrl) {
                 throw new Error('Image URL is empty');
             }
-        
-            // Store and set the image
+
+            // Store image
             const imageData = {
                 imageUrl: imageResult.result.imageUrl,
                 prompt: basePrompt,
                 refinedPrompt: finalPrompt !== basePrompt ? finalPrompt : null,
                 description: descriptionData,
-                aspectRatio: aspectRatio
+                aspectRatio: aspectRatio,
             };
-            
+
             storeImage(imageData);
             setSelectedImage(imageData);
+            setQueuedJobs(prev => prev - 1); // Decrement queued job count after completion
         } catch (error) {
             console.error('Error during image generation:', error);
             alert('Error during the process. Please try again.');
@@ -65,40 +79,18 @@ const useImageGenerator = (apiKey) => {
             setLoading(false);
         }
     };
-    
 
     const pollForResult = async (apiCall, maxRetries = 3, pollInterval = 5000) => {
         let retryCount = 0;
-        const startTime = Date.now();
-
-        while (true) {  // Infinite loop will be broken by condition checks inside
-            try {
-                const response = await apiCall();
-
-                // Check if the response status is 200 and if the task is not pending
-                if (response && response.status === 'PENDING') {
-                    // Wait for the exponential backoff delay before retrying
-                    await new Promise(resolve => setTimeout(resolve, pollInterval));
-                    retryCount += 1;
-
-                    // Check if the maximum polling duration has been reached
-                    if (Date.now() - startTime > pollInterval * maxRetries) {
-                        throw new Error('Polling timed out');
-                    }
-                } else if(response) {
-                    return response;
-                }
-                else {
-                    throw new Error(`Unexpected response status: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Polling error:', error.message);
-                retryCount += 1;
-                if (retryCount >= maxRetries) {
-                    throw new Error('Max retries reached');
-                }
+        while (retryCount < maxRetries) {
+            const response = await apiCall();
+            if (response && response.status !== 'PENDING') {
+                return response;
             }
+            await new Promise(resolve => setTimeout(resolve, pollInterval));
+            retryCount++;
         }
+        throw new Error('Polling timed out');
     };
 
     const storeImage = (imageData) => {
@@ -110,22 +102,6 @@ const useImageGenerator = (apiKey) => {
 
     const handleCloseFullImageViewer = () => {
         setSelectedImage(null);
-    };
-
-    const copyPrompt = () => {
-        const promptElement = document.getElementById('prompt');
-        if (promptElement) {
-            try {
-                navigator.clipboard.writeText(prompt).then(() => {
-                    // Set the value of the prompt element
-                    promptElement.value = prompt;
-                });
-            } catch (err) {
-                console.error('Failed to copy prompt:', err);
-            }
-        } else {
-            console.error('Prompt element not found');
-        }
     };
 
     return {
@@ -140,7 +116,8 @@ const useImageGenerator = (apiKey) => {
         selectedImage,
         handleSubmit,
         handleCloseFullImageViewer,
-        copyPrompt
+        queuedJobs, // Exposing the queued job count
+        runningJobs, // Exposing the running job count
     };
 };
 

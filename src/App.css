@@ -696,3 +696,18 @@ input.dark-theme:focus {
     top:0px;
     margin: 5px 0px 0px 5px;
 }
+
+.status-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.queue-indicator, .running-indicator {
+    display: flex;
+    align-items: center;
+}
+
+.status-icon {
+    margin-right: 0.5rem;
+}

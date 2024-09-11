@@ -8,6 +8,7 @@ import { AiOutlineSend } from 'react-icons/ai';
 import { FaSpinner, FaStop, FaTrash } from 'react-icons/fa'; // Import stop and trash icons
 import useTheme from '../hooks/useTheme'; // Import useTheme hook
 
+
 const Chat = () => {
     const {
         userQuery,

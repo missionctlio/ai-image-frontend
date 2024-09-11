@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Thumbnails from './Thumbnails'; // Import the Thumbnails component
-import FullImageViewer from './FullImageViewer'; // Import the FullImageViewer component
-import { FaPaperPlane } from 'react-icons/fa'; // Import the icon (Font Awesome example)
-import useImageGenerator from '../hooks/useImageGenerator'; // Import the custom hook
-import useTheme from '../hooks/useTheme'; // Import the theme hook
+import Thumbnails from './Thumbnails';
+import FullImageViewer from './FullImageViewer';
+import { FaPaperPlane, FaListUl, FaPlayCircle } from 'react-icons/fa';
+import useImageGenerator from '../hooks/useImageGenerator';audi rsaudi 
+import useTheme from '../hooks/useTheme';
 
 const ImageGenerator = () => {
-    const apiKey = 'your-api-key-here'; // Ensure this is secure and retrieved securely
+    const apiKey = 'your-api-key-here';
     const {
         prompt,
         setPrompt,
@@ -18,7 +18,9 @@ const ImageGenerator = () => {
         images,
         selectedImage,
         handleSubmit,
-        handleCloseFullImageViewer
+        handleCloseFullImageViewer,
+        queuedJobs, // Use queuedJobs from the hook
+        runningJobs  // Use runningJobs from the hook
     } = useImageGenerator(apiKey);
 
     const [theme, setTheme] = useState('dark');
@@ -26,6 +28,24 @@ const ImageGenerator = () => {
     return (
         <div className="container">
             <form id="promptForm" className="form-container" onSubmit={handleSubmit}>
+            <div className="status-indicator">
+                    {/* Display queued and running jobs with icons */}
+                    <div className="queue-indicator">
+                        {queuedJobs > 0 && (
+                            <span className="status-icon-container" title={`Queued Jobs`}>
+                                <FaListUl className="status-icon" /> {queuedJobs}
+                            </span>
+                        )}
+                    </div>
+                    <br />
+                    <div className="running-indicator">
+                        {runningJobs > 0 && (
+                            <span className="status-icon-container" title={`Running Jobs`}>
+                                <FaPlayCircle className="status-icon" /> {runningJobs}
+                            </span>
+                        )}
+                    </div>
+                </div>
                 <input
                     type="text"
                     id="prompt"
@@ -77,14 +97,12 @@ const ImageGenerator = () => {
                                 <div className="dot"></div>
                             </div>
                         ) : (
-                            <FaPaperPlane size={24} /> // Replace text with icon
+                            <FaPaperPlane size={24} />
                         )}
                     </button>
                 </div>
             </form>
-            <div className="button-container">
-            </div>
-            <Thumbnails images={images} /> {/* Pass images as a prop */}
+            <Thumbnails images={images} />
             {selectedImage && (
                 <FullImageViewer image={selectedImage} onClose={handleCloseFullImageViewer} />
             )}

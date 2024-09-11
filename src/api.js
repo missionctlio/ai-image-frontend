@@ -239,3 +239,18 @@ export const deleteChatHistory = async () => {
         throw new Error('Failed to delete chat history');
     }
 };
+
+// Get queued and running job counts
+export const getJobCounts = async () => {
+    try {
+        const response = await axios.get(`${baseUrl}/inference/image/jobs/queued`);
+        if (response.status === 200 && response.data) {
+            return response.data;
+        } else {
+            throw new Error(`Request failed with status code ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error getting job counts:', error.message);
+        throw new Error('Failed to get job counts');
+    }
+};
