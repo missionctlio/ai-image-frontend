@@ -15,39 +15,34 @@ axiosInstance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
-        // Log the error response for better visibility
-        console.log('Error response received:', {
+        // Log the error response
+        console.error('Error response:', {
             url: originalRequest.url,
             method: originalRequest.method,
             status: error.response?.status,
             data: error.response?.data,
         });
 
-        // Prevent retrying the /auth/refresh request itself
-        if (originalRequest.url.includes('/auth/refresh')) {
+        // If the request is for token refresh or the original request has been retried, reject the promise
+        if (originalRequest.url.includes('/auth/refresh') || originalRequest._retry) {
             if (error.response?.data?.detail === 'Refresh token missing') {
-                console.log('Refresh token missing. Logging out...');
-                localStorage.delete("user");
-                console.log("user", localStorage.getItem("user"))
-                handleLogout(); // Call the logout function to clear the session
+                console.warn('Refresh token missing. Logging out...');
+                localStorage.removeItem('user'); // Remove user info from local storage
+                window.location.reload();
+                handleLogout(); // Call the logout function
             }
             return Promise.reject(error);
         }
 
-        // If the request failed due to an expired token, try refreshing the token
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
+        // If the error is a 401 and the request hasn't been retried yet
+        if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            console.log('Token expired or unauthorized. Attempting token refresh...', {
-                originalRequestUrl: originalRequest.url
-            });
+            console.info('Attempting to refresh token...');
 
             try {
-                // Attempt to refresh the token
-                await axiosInstance.post('/auth/refresh', null, { withCredentials: true });
-                
-                // Retry the original request
-                console.log('Retrying original request after successful token refresh:', originalRequest.url);
+                await axiosInstance.post('/auth/refresh');
+                console.info('Token refreshed successfully. Retrying original request...');
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
                 console.error('Token refresh failed:', {
@@ -56,25 +51,16 @@ axiosInstance.interceptors.response.use(
                     data: refreshError.response?.data,
                 });
 
-                // Check if the refresh token is missing and log the user out
                 if (refreshError.response?.data?.detail === 'Refresh token missing') {
-                    console.log('Refresh token missing. Logging out...');
-                    localStorage.removeItem("user");
-                    console.log("user", localStorage.getItem("user"))
-                    handleLogout(); // Call the logout function to clear the session
+                    console.warn('Refresh token missing. Logging out...');
+                    localStorage.removeItem('user'); // Remove user info from local storage
+                    window.location.reload();
+                    handleLogout(); // Call the logout function
                 }
 
-                // Optional: reject the original request and stop further processing
                 return Promise.reject(refreshError);
             }
         }
-
-        // Log that the request failed with an error and the response is not retried
-        console.log('Request failed without retry:', {
-            url: originalRequest.url,
-            method: originalRequest.method,
-            error: error.message
-        });
 
         return Promise.reject(error);
     }
@@ -243,7 +229,7 @@ export const deleteChatHistory = async () => {
 // Get queued and running job counts
 export const getJobCounts = async () => {
     try {
-        const response = await axios.get(`${baseUrl}/inference/image/jobs/queued`);
+        const response = await axiosInstance.get(`${baseUrl}/inference/image/jobs/queued`);
         if (response.status === 200 && response.data) {
             return response.data;
         } else {

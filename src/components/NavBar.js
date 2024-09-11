@@ -5,7 +5,7 @@ import Profile from './Profile';
 import '../styles/NavBar.css';
 import useTheme from '../hooks/useTheme';
 
-const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, logout }) => {
+const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, toggleProfile, handleLogout }) => {
     const [isSettingsDropdownOpen, setIsSettingsDropdownOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 768);
@@ -113,7 +113,7 @@ const NavBar = ({ user, selectedComponent, handleComponentChange, showProfile, t
                                 <span>Theme</span>
                                 <ThemeSelector theme={theme} setTheme={setTheme} />
                             </div>
-                            <button onClick={logout} className="navbar-item">
+                            <button onClick={handleLogout} className="navbar-item">
                                 Logout
                             </button>
                         </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { generateImage, getTaskStatus, generateRefinedPrompt, generateDescription, getJobCounts } from '../api';
 
-const useImageGenerator = (apiKey) => {
+const useImageGenerator = () => {
     const [prompt, setPrompt] = useState('');
     const [aspectRatio, setAspectRatio] = useState('1:1');
     const [usePromptRefiner, setUsePromptRefiner] = useState(true);
@@ -50,7 +50,7 @@ const useImageGenerator = (apiKey) => {
                 : basePrompt;
 
             // Generate image
-            const { taskId } = await generateImage({ userPrompt: finalPrompt, aspectRatio }, apiKey);
+            const { taskId } = await generateImage({ userPrompt: finalPrompt, aspectRatio });
             setQueuedJobs(prev => prev + 1); // Increment queued job count
 
             // Poll for task status

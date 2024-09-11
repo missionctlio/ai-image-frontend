@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
-import { verifyGoogleToken, logout as apiLogout } from '../api.js';
+import { verifyGoogleToken, logout } from '../api.js';
 
 export const useAuth = () => {
     const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')) || null);
@@ -57,26 +57,27 @@ export const useAuth = () => {
         onSuccess: handleLoginSuccess,
         onError: handleLoginError,
     });
-    const handleLogout = () => {
+    // const handleLogout = () => {
+    //     try {
+    //         console.log('Logging out user...');
+    
+    //         // Clear localStorage
+    //         localStorage.removeItem('user');
+    //         localStorage.removeItem('accessToken');
+    //         setUser(null);
+    //         setAccessToken(null);
+    //         // Optional: You can perform additional actions here, such as redirecting the user
+    //         console.log('User successfully logged out. Local storage cleared.');
+    
+    //         // Redirect to login page or homepage
+    //         window.location.reload();
+    //     } catch (error) {
+    //         console.error('Error during logout:', error.message);
+    //     }
+    // };
+    const handleLogout = async () => {
         try {
-            console.log('Logging out user...');
-    
-            // Clear localStorage
-            localStorage.removeItem('user');
-            localStorage.removeItem('accessToken');
-    
-            // Optional: You can perform additional actions here, such as redirecting the user
-            console.log('User successfully logged out. Local storage cleared.');
-    
-            // Redirect to login page or homepage
-            window.location.href = '/login'; // Or any other route
-        } catch (error) {
-            console.error('Error during logout:', error.message);
-        }
-    };
-    const logout = async () => {
-        try {
-            await apiLogout(); // Call API to handle server-side logout if necessary
+            await logout(); // Call API to handle server-side logout if necessary
             googleLogout();
             setUser(null);
             setAccessToken(null);
@@ -88,32 +89,8 @@ export const useAuth = () => {
         }
     };
 
-    useEffect(() => {
-        // This effect will trigger when `needsRefresh` or `errorDetail` changes
-        if (!user && !accessToken) {
-            console.log('User is logged out. Triggering re-render.');
-        }
-        
-        if (errorDetail === 'Refresh token missing') {
-            // Handle the error case where refresh token is missing
-            console.log('Refresh token is missing, logging out.');
-            logout(); // Trigger logout flow
-        }
-    }, [needsRefresh, user, accessToken, errorDetail]);
+    useEffect(() => {        
+    }, [needsRefresh, user, accessToken]);
 
-    // Example function to simulate receiving the message
-    const checkForErrorDetail = (message) => {
-        if (message?.detail === "Refresh token missing") {
-            console.log("No Refresh Token")
-            setErrorDetail("Refresh token missing");
-            googleLogout();
-            setUser(null);
-            setAccessToken(null);
-            localStorage.removeItem('user'); // Remove user info from local storage
-            localStorage.removeItem('accessToken'); // Remove access token from local storage
-            setNeedsRefresh(prev => !prev); // Trigger re-render by toggling state
-        }
-    };
-
-    return { user, accessToken, setUser, login, handleLoginError, handleLogout, handleLoginSuccess, isAllowedEmail, logout, checkForErrorDetail };
+    return { user, accessToken, setUser, login, handleLoginError, handleLogout, handleLoginSuccess, isAllowedEmail };
 };

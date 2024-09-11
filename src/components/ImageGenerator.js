@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import Thumbnails from './Thumbnails';
 import FullImageViewer from './FullImageViewer';
 import { FaPaperPlane, FaListUl, FaPlayCircle } from 'react-icons/fa';
-import useImageGenerator from '../hooks/useImageGenerator';audi rsaudi 
+import useImageGenerator from '../hooks/useImageGenerator';
 import useTheme from '../hooks/useTheme';
 
 const ImageGenerator = () => {
-    const apiKey = 'your-api-key-here';
     const {
         prompt,
         setPrompt,
@@ -21,7 +20,7 @@ const ImageGenerator = () => {
         handleCloseFullImageViewer,
         queuedJobs, // Use queuedJobs from the hook
         runningJobs  // Use runningJobs from the hook
-    } = useImageGenerator(apiKey);
+    } = useImageGenerator();
 
     const [theme, setTheme] = useState('dark');
 
@@ -38,13 +37,6 @@ const ImageGenerator = () => {
                         )}
                     </div>
                     <br />
-                    <div className="running-indicator">
-                        {runningJobs > 0 && (
-                            <span className="status-icon-container" title={`Running Jobs`}>
-                                <FaPlayCircle className="status-icon" /> {runningJobs}
-                            </span>
-                        )}
-                    </div>
                 </div>
                 <input
                     type="text"

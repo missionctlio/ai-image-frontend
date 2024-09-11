@@ -14,7 +14,7 @@ const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const App = () => {
     const { selectedComponent, handleComponentChange, toggleProfile, showProfile } = useApp();
     const { theme, setTheme } = useTheme();
-    const { user, handleLoginSuccess, handleLoginError, logout } = useAuth();
+    const { user, handleLoginSuccess, handleLoginError, handleLogout } = useAuth();
 
     useEffect(() => {
     }, [user]);
@@ -29,7 +29,7 @@ const App = () => {
                         handleComponentChange={handleComponentChange}
                         toggleProfile={toggleProfile}
                         showProfile={showProfile}
-                        logout={logout}
+                        handleLogout={handleLogout}
                     />
                     <div className="component-container">
                         {selectedComponent === 'chat' && <Chat theme={theme} setTheme={setTheme} />}
